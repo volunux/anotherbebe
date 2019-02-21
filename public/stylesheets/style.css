@@ -1,0 +1,170 @@
+* {
+
+		font-family : monospace;
+		font-size : 0.975em;
+		font-weight : normal;
+		font-style : normal;
+		line-height : 1.2em;
+		text-decoration : none;
+		box-sizing : border-box;
+		margin : 0;
+		border : 0;
+		padding : 0;
+}
+
+h1 , h2 , h3 , h4 , h5 , h6 {
+
+	font-size : 1em;
+}
+
+.container {
+
+	width : 90%;
+	margin : 0px auto;
+}
+
+.name-add {
+
+	margin : 1em;
+	padding : 1em;
+}
+
+.name-add label , input , select {
+
+	display : inline-block;
+}
+
+.name-add h1 , form {
+
+	margin : 1em;
+}
+
+.name-add form {
+
+	padding : 1em;
+}
+
+.name-add p {
+
+	padding : 1em;
+}
+
+.name-add p label {
+
+	width : 25%;
+	margin-right : .5em;
+	padding : 6px;
+}
+
+.name-add button {
+
+	padding : 1em 2.2em;
+	border : 1px dashed gray;
+	background-color : #fff;
+	border-radius : 6px;
+	float : right;
+}
+
+.name-add p input , select {
+
+	width : 72%;
+	border : 1px dashed gray;
+	border-radius : 8px;
+	padding : 6px;
+}
+
+
+.name-delete {
+
+	margin : 1em;
+	padding : 1em;
+}
+
+.name-delete label , input , select {
+
+	display : inline-block;
+}
+
+.name-delete h1 , form {
+
+	margin : 1em;
+}
+
+.name-delete form {
+
+	padding : 1em;
+}
+
+.name-delete p {
+
+	padding : 1em;
+}
+
+.name-delete p label {
+
+	width : 25%;
+	margin-right : .5em;
+	padding : 6px;
+}
+
+.name-delete button {
+
+	padding : 1em 2.2em;
+	border : 1px dashed gray;
+	background-color : #fff;
+	border-radius : 6px;
+	float : right;
+}
+
+.name-detail {
+
+	margin : 1em;
+	padding : 1em;
+}
+
+.name-detail * {
+
+	line-height : 2em;
+}
+
+.name-add textarea {
+
+	width : 72%;
+	resize: none;
+	display : inline-block;
+	padding : 1em;
+	border : 0.5px dashed gray;
+	border-radius: 8px;
+	height : 150px;
+	vertical-align : bottom; 
+	margin-bottom : 1.5em;
+}
+
+
+@media screen and (max-width : 610px) {
+
+.container {
+
+	width : 100%;
+}
+
+	.name-add p label {
+
+		display : block;
+		width : 100%;
+		padding : 2px;
+		border : 0;
+		margin-bottom : .5em;
+	}
+
+	.name-add p input , select , label {
+
+		width : 100%;
+	}
+
+	.name-add textarea {
+
+		width : 100%;
+	}
+
+}
