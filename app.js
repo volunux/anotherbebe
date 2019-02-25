@@ -1,6 +1,10 @@
-var createError = require('http-errors') , express = require('express'), path = require('path'), cookieParser = require('cookie-parser'), logger = require('morgan'), routes = require('./app_server/routes/route'),
+var createError = require('http-errors') , express = require('express') , path = require('path') , cookieParser = require('cookie-parser') , logger = require('morgan') , app = express(); 
 
-app = express();
+routes = require('./app_server/routes/route') , apiRoutes = require('./app_api/routes/route'), 
+
+
+
+require('./app_api/config/mongodb');
 
 app.set('views', path.join(__dirname, 'app_server' ,  'views'));
 																																	app.set('view engine', 'pug');
@@ -10,6 +14,7 @@ app.set('views', path.join(__dirname, 'app_server' ,  'views'));
 app.use(cookieParser());
 													app.use(express.static(path.join(__dirname, 'public')));
 																																										routes(app);
+																																																	apiRoutes(app);
 
 
 app.use((req, res, next) => {					next(createError(404));										});

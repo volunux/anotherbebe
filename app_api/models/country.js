@@ -1,12 +1,20 @@
 var mongoose = require('mongoose'),		Schema = mongoose.Schema;
 
 var countrySchema = new Schema({
-																	'country' : {
-																									'type' : String,
-																																	'minlength' : 1,
-																																										'required' : true,
-																																																				'maxlength' : 30
-																	}
+																	'code' : {	'type' : String , 
+																																'maxlength' : 5 ,
+																																									'required' : true ,
+																																																				'minlength' : 1	},
+																		'name' : {
+																								'type' : String ,
+																																	'maxlength' : 20 ,
+																																											'required' : true ,
+																																																					'minlength' : 1		} ,
+																					'phone_code' : {
+																														'type' : String ,
+																																								'maxlength' : 7 ,
+																																																		'required' : true ,
+																																																													'minlength' : 1 	}
 },	{
 				'toObject' : {
 												'virtuals' : true
@@ -17,10 +25,13 @@ var countrySchema = new Schema({
 								'getters' : true
 });
 
-countrySchema
-							.virtual('url')
-															.get(function () {
-  																								return '/country/' + this.country;
+/**countrySchema
+								.virtual('url')
+																.get(function () {
+  																										return '/country/' + this.country;
 				});
 
-module.exports = mongoose.model('Country' , countrySchema);
+
+*/
+
+module.exports = mongoose.model('country' , countrySchema);

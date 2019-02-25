@@ -11,6 +11,8 @@ module.exports = (app) => {
 	app.use('/'											,												index);
 	app.use('/'											,												iname);
 
+	
+
 	app.use('/achievement'					,												achievement);
 	app.use('/antiquity'						,												antiquity);
 	app.use('/art'									,												art);

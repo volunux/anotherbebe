@@ -16,32 +16,52 @@ block content
 				textarea(id ='definition' name ='definition' required ='true' ) #{(undefined === name ? '' : name.definition)}
 
 			p
+				label(for ='morphology') Morphology * :
+				textarea(id ='morphology' name ='morphology' required ='true' ) #{(undefined === name ? '' : name.morphology)}
+
+			p
+				label(for ='gloss') Gloss * :
+				textarea(id ='gloss' name ='gloss' required ='true' ) #{(undefined === name ? '' : name.gloss)}
+
+			p
 				label(for ='alphabet') Alphabet * :
 				select(id ='alphabet' name ='alphabet')
 					option(value ='') 
-					option(value ='A') A
-					option(value ='B') B
-					option(value ='C') C
-					option(value ='D') D
-					option(value ='E') E
+					for letter in alphabet
+						if name
+							option(value =letter._id selected =(letter._id.toString() == name.alphabet._id || letter._id.toString() == name.alphabet) ? 'selected' : false) #{letter.alphabet}
+						else
+							option(value=letter._id) #{letter.alphabet}
 
 			p
 				label(for ='ethnic_group') Ethnic Group * :
 				select(id ='ethnic_group' name ='ethnic_group')
 					option(value ='') 
-					option(value ='English') English
-					option(value ='Finnish') Finnish
-					option(value ='Indian') Indian
-					option(value ='Hausa') Hausa
-					option(value ='Yoruba') Yoruba
+					for people in eyon
+						if name
+							option(value =people._id selected =(people._id.toString() == name.ethnic_group._id || people._id.toString() == name.ethnic_group) ? 'selected' : false) #{people.eyon}
+						else
+							option(value=people._id) #{people.eyon}
 
 			p
 				label(for ='gender') Gender * :
 				select(id ='gender' name ='gender')
 					option(value ='') 
-					option(value ='Male') Male
-					option(value ='Female') Female
-					option(value ='Both') Both
+					for type in gender
+						if name
+							option(value =type._id selected =(type._id.toString() == name.gender._id || type._id.toString() == name.gender) ? 'selected' : false) #{type.gender}
+						else
+							option(value=type._id) #{type.gender}
+
+			p
+				label(for ='baby') Baby * :
+				select(id ='baby' name ='baby')
+					option(value ='') 
+					for decision in baby
+						if name
+							option(value =decision._id selected =(decision._id.toString() == name.baby._id || decision._id.toString() == name.baby) ? 'selected' : false) #{decision.baby}
+						else
+							option(value=decision._id) #{decision.baby}
 
 			p
 				button(type ='submit' title ='Submit') Submit

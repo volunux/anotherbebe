@@ -4,17 +4,7 @@ block content
 	.name-detail
 		h1= title
 
-		p
-			a(href ='/a') A
-		p
-			a(href ='/a') B
-		p
-			a(href ='/a') C
-		p
-			a(href ='/a') D
-		p
-			a(href ='/a') E
-		p
-			a(href ='/a') F
-		p
-			a(href ='/a') G
+		for eyon in eyons
+			.eyon-col-2
+				p
+					a(href ='/' + eyon.eyon + '/name/') #{eyon.eyon}

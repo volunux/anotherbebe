@@ -4,7 +4,9 @@ block content
 	.name-detail
 		h1= title
 
-		p Name : name.name
-		p Definition : name.definition
-		p Alphabet : name.alphabet
-		p Gender : name.gender
+		p Name : #{details.name}
+		p Definition : #{details.definition}
+		p Morphology : #{details.morphology}
+		p Gloss : #{details.gloss}
+		p Alphabet : #{details.alphabet.alphabet}
+		p Gender : #{details.gender.gender}

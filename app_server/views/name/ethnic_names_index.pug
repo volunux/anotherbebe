@@ -1,0 +1,13 @@
+extends ../layouts/name_layout
+
+block content
+	.name-detail
+		h1= title
+
+		for name in names
+			.col-alpha-detail
+				p 
+					a(href ='/name/' + name.name.toLowerCase()) #{name.name}
+				p Ethnic Group Name is Found : #{name.ethnic_group.eyon}
+				p Gender for Name : #{name.gender.gender}
+
