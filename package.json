@@ -1,0 +1,56 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "Node JavaScript Programming",
+  "main": "index.js",
+  "engines": {
+    "node": "10.14.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/volunux/adigunbebe"
+  },
+  "keywords": [
+    "Node",
+    "JavaScript"
+  ],
+  "author": "Yusuf Musa Yusuf",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.2",
+    "connect": "^3.6.6",
+    "cookie": "^0.3.1",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.1.0",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "express-error-handler": "^1.1.0",
+    "express-method-override": "0.0.3",
+    "express-validator": "^5.1.0",
+    "foreman": "^3.0.1",
+    "http-errors": "~1.6.2",
+    "method-override": "^2.3.10",
+    "moment": "^2.23.0",
+    "mongod": "^2.0.0",
+    "mongodb": "^3.0.5",
+    "mongoose": "^5.4.13",
+    "mongoose-autopopulate": "^0.9.1",
+    "mongoskin": "^2.1.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.17.2",
+    "pg": "^7.4.1",
+    "pug": "^2.0.3",
+    "resolve": "^1.6.0",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "should": "^13.2.1"
+  }
+}
