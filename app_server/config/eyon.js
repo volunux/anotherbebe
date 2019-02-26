@@ -1,6 +1,6 @@
 module.exports = {
 
-		'reqOptions' : {		'url' : 'http://localhost:3000/api/eyon/' ,
+		'reqOptions' : {		'url' : 'http://lit-earth-39638.herokuapp.com/api/eyon/' ,
 																																		'method' : 'GET' ,
 																																												'json' : {},
 																																																			'qs' : {}			}
