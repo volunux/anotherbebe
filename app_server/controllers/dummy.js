@@ -1,5 +1,9 @@
 module.exports = {
 	
+	'dummy' : (req , res , next) => {
+																						  res.json({'message' : 'Dummy message'});
+	} ,	
+
 	'name' : (req , res , next) => {
 																						  res.render('index', { title: 'Names' });
 	} ,

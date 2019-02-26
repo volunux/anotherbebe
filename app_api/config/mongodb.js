@@ -2,7 +2,7 @@ var mongoose = require('mongoose'),			config = require('./db');
 
 mongoose.promise = global.promise;
 
-mongoose.connect('mongodb://yusuf:08099757823@mongodb-908-0.cloudclusters.net/Aremi?authSource=admin' , { 'useNewUrlParser' : true });
+mongoose.connect(config.url , { 'useNewUrlParser' : true });
 
 mongoose.connection.on('connected' , () => {
 																									console.log('App establish connection to the database');

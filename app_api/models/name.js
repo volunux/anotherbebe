@@ -13,7 +13,9 @@ var nameSchema = new Schema({
 
 										'gender' : {	'type' : Schema.Types.ObjectId ,	'ref' : 'Gender' , 'autopopulate' : true 	} ,
 
-																														'baby' : {	'type' : Schema.Types.ObjectId ,	'ref' : 'Baby' , 'autopopulate' : true 	} 
+																														'baby' : {	'type' : Schema.Types.ObjectId ,	'ref' : 'Baby' , 'autopopulate' : true 	} ,
+
+																														'specie' : {	'type' : Schema.Types.ObjectId ,	'ref' : 'Specie' , 'autopopulate' : true 	}
 },	{
 				'toObject' : {
 												'virtuals' : true

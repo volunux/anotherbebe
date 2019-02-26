@@ -1,6 +1,6 @@
 var ethnic = '' , alpha = '' , async = require('async') , Eyon = require('../models/eyon') , Alphabet = require('../models/alphabet') , Name = require('../models/name') , Gender = require('../models/gender') ,
 
-Baby = require('../models/baby') , config = require('../config/config') , name = '' , nValue = '' , nParam = '';
+Baby = require('../models/baby') , Specie = require('../models/specie') , config = require('../config/config') , name = '' , nValue = '' , nParam = '';
 
 module.exports = {
 
@@ -19,7 +19,48 @@ module.exports = {
 	},
 
 	'names' : (req , res , next) => {
-																									  res.render('name/index' , { 'title': 'List of Names' });
+
+								Name.find({})
+															.exec((err , nameResult) => {
+																														if (err) {
+																																								config.response(res , 404 , err);
+																																																									return;	}
+																														if (!nameResult) {
+																																								config.response(res , 404 , {'message' : 'Name cannot be found'});
+																																																																											return;	}
+																																								config.response(res , 200 , nameResult);																					});
+	} , 
+
+	'nameByHumanAll' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase();
+
+		async.waterfall([
+				
+				(callback) => {
+																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
+																																																		.exec((err , ethnicResult) => {
+																																																																						callback(null , ethnicResult);	});	
+																																													},
+				(arg1 , callback) => {
+																				Specie.findOne({'specie' : new RegExp('human' , 'i')})
+																																																		.exec((err , specieResult) => {
+																																																																						callback(null , specieResult , arg1);	});
+																																													},
+
+				(arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , specie = arg2['_id'];
+
+																				Name.find({'ethnic_group' : ethnic , 'specie' : specie})
+
+																																																		.exec((err , namesResult) => {
+																																																																						callback(null , namesResult);		})
+																																														}],
+				(err , finalResult) => {
+																	if (err) {
+																												config.response(res , 404 , err);
+																																														return;	}
+																	if (!finalResult) {
+																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
+																																																																								return;		}
+																												config.response(res , 200 , finalResult);																																														});
 	} , 
 
 	'nameEthnic' : (req , res , next) => {
@@ -62,7 +103,7 @@ module.exports = {
 		async.waterfall([
 				
 				(callback) => {
-																				Eyon.find({'eyon' : new RegExp(ethnic , 'i')})
+																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
 																																																		.exec((err , ethnicResult) => {
 																																																																						callback(null , ethnicResult);	});	
 																																													},
@@ -71,9 +112,120 @@ module.exports = {
 																																																		.exec((err , genderResult) => {
 																																																																						callback(null , genderResult , arg1);	});
 																																													},
-				(arg2 , arg1 , callback) => {		ethnic = arg1[0]['_id'] , gender = arg2['_id'];
+				(arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , gender = arg2['_id'];
 
 																				Name.find({'ethnic_group' : ethnic , 'gender' : gender})
+																																																		.exec((err , namesResult) => {
+																																																																						callback(null , namesResult);		})
+																																														}],
+				(err , finalResult) => {
+																	if (err) {
+																												config.response(res , 404 , err);
+																																														return;	}
+																	if (!finalResult) {
+																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
+																																																																								return;		}
+																												config.response(res , 200 , finalResult);																																														});
+	} , 
+
+	'nameByHuman' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+
+		async.waterfall([
+				
+				(callback) => {
+																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
+																																																		.exec((err , ethnicResult) => {
+																																																																						callback(null , ethnicResult);	});	
+																																													},
+				(arg1 , callback) => {
+																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
+																																																		.exec((err , genderResult) => {
+																																																																						callback(null , genderResult , arg1);	});
+																																													},
+				(arg2 , arg1 , callback) => {
+																				Specie.findOne({'specie' : new RegExp('human' , 'i')})
+																																																		.exec((err , specieResult) => {
+																																																																						callback(null , specieResult , arg2 , arg1);	});
+																																													},
+
+				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
+
+																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
+
+																																																		.exec((err , namesResult) => {
+																																																																						callback(null , namesResult);		})
+																																														}],
+				(err , finalResult) => {
+																	if (err) {
+																												config.response(res , 404 , err);
+																																														return;	}
+																	if (!finalResult) {
+																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
+																																																																								return;		}
+																												config.response(res , 200 , finalResult);																																														});
+	} , 
+
+	'nameByAnimal' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+
+		async.waterfall([
+				
+				(callback) => {
+																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
+																																																		.exec((err , ethnicResult) => {
+																																																																						callback(null , ethnicResult);	});	
+																																													},
+				(arg1 , callback) => {
+																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
+																																																		.exec((err , alphabetResult) => {
+																																																																						callback(null , alphabetResult , arg1);	});
+																																													},
+				(arg2 , arg1 , callback) => {
+																				Specie.findOne({'specie' : new RegExp('animal' , 'i')})
+																																																		.exec((err , specieResult) => {
+																																																																						callback(null , specieResult , arg2 , arg1);	});
+																																													},
+
+				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
+
+																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
+
+																																																		.exec((err , namesResult) => {
+																																																																						callback(null , namesResult);		})
+																																														}],
+				(err , finalResult) => {
+																	if (err) {
+																												config.response(res , 404 , err);
+																																														return;	}
+																	if (!finalResult) {
+																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
+																																																																								return;		}
+																												config.response(res , 200 , finalResult);																																														});
+	} , 
+
+	'nameByPlant' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+
+		async.waterfall([
+				
+				(callback) => {
+																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
+																																																		.exec((err , ethnicResult) => {
+																																																																						callback(null , ethnicResult);	});	
+																																													},
+				(arg1 , callback) => {
+																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
+																																																		.exec((err , alphabetResult) => {
+																																																																						callback(null , genderResult , arg1);	});
+																																													},
+				(arg2 , arg1 , callback) => {
+																				Specie.findOne({'specie' : new RegExp('plant' , 'i')})
+																																																		.exec((err , specieResult) => {
+																																																																						callback(null , specieResult , arg2 , arg1);	});
+																																													},
+
+				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
+
+																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
+
 																																																		.exec((err , namesResult) => {
 																																																																						callback(null , namesResult);		})
 																																														}],
@@ -101,7 +253,7 @@ module.exports = {
 	} , 
 
 	'nameAdd' : (req , res , next) => {
-
+		
 			async.parallel({
 																									'Eyon' : (callback) => {
 																																											Eyon.find({}).exec(callback);
@@ -113,6 +265,10 @@ module.exports = {
 
 																									'Gender' : (callback) => {
 																																											Gender.find({}).exec(callback);
+																									},
+
+																									'Specie' : (callback) => {
+																																											Specie.find({}).exec(callback);
 																									},
 
 																									'Baby' : (callback) => {

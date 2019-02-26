@@ -1,13 +1,17 @@
-extends ../layouts/name_layout
+extends ../name_layout
 
 block content
 	.name-detail
 		h1= title
 
-		for name in names
-			.col-alpha-detail
-				p 
-					a(href ='/name/' + name.name.toLowerCase()) #{name.name}
-				p Ethnic Group Name : #{name.ethnic_group.eyon}
-				p Name Gender : #{name.gender.gender}
+		.row
+			if names
+				for name in names
+					.col-sm-6.col-md-4.col-lg-4
+						p 
+							a(href ='/name/' + name.name.toLowerCase()) #{name.name}
+						p Ethnic Group Name : #{name.ethnic_group.eyon}
+						p Name Gender : #{name.gender.gender}
 
+				else
+					p No names available under this gender.

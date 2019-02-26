@@ -1,12 +1,24 @@
-extends ../layouts/name_layout
+extends ../name_layout
 
 block content
-	.name-detail
 		h1= title
 
 		p Name : #{details.name}
-		p Definition : #{details.definition}
-		p Morphology : #{details.morphology}
-		p Gloss : #{details.gloss}
-		p Alphabet : #{details.alphabet.alphabet}
-		p Gender : #{details.gender.gender}
+		if details.definition
+			p Definition : #{details.definition}
+		if details.morphology
+			p Morphology : #{details.morphology}
+		if details.gloss
+			p Gloss : #{details.gloss}
+		if details.alphabet
+			p Alphabet : #{details.alphabet.alphabet}
+		if details.gender
+			p Gender : #{details.gender.gender}
+		if details.specie
+			p Specie : #{details.specie.specie}
+		if details.baby
+			p Name Given to a baby ? :
+				if details.baby.baby
+					|	Yes
+				else
+					| No

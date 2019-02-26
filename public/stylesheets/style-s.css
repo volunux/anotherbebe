@@ -1,0 +1,24 @@
+* {
+
+	text-decoration : none; 
+}
+
+h1 , h2 , h3 , h4 , h5 , h6 , p , label , select , form {
+
+	font-size : 0.75rem;
+}
+
+textarea {
+
+	resize : none;
+}
+
+.footer {
+
+	clear : both;
+}
+
+.footer p {
+
+	text-align : center;
+}

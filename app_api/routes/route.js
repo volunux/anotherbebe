@@ -6,7 +6,7 @@ song = require('./song') , video = require('./video') , antiquity = require('./a
 
 achievement = require('./achievement') , country = require('./country') , gender = require('./gender') , alphabet = require('./alphabet')  , baby = require('./baby') , eyon = require('./eyon') ,
 
-iname = require('./iname') , index = require('./index');
+specie = require('./specie') , iname = require('./iname') , index = require('./index');
 
 module.exports = (app) => {
 
@@ -34,6 +34,7 @@ module.exports = (app) => {
 	app.use('/api'									,												proverb);
 	app.use('/api'									,												religion);
 	app.use('/api'									,												song);
+	app.use('/api'									,												specie);
 
 	app.use('/api'									,												user);
 

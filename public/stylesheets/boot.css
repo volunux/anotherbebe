@@ -2505,6 +2505,7 @@ fieldset:disabled a.btn {
   color: #fff;
   background-color: #007bff;
   border-color: #007bff;
+  font-size : 0.75rem;
 }
 
 .btn-primary:hover {

@@ -1,9 +1,14 @@
 doctype html
 html
 	head
-		title= title
-    
-		link(rel='stylesheet' , href='/stylesheets/style.css')
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		link(rel='stylesheet' , href='/stylesheets/boot.css')
+		link(rel='stylesheet' , href='/stylesheets/style-s.css')
 		meta(name ='viewport' content ='width=device-width , initial-sclae=1')
 	body
-		block content
+		.container
+			block content

@@ -1,10 +1,11 @@
-extends ../layouts/name_layout
+extends ../name_layout
 
 block content
 	.name-detail
 		h1= title
 
-		for eyon in eyons
-			.eyon-col-2
-				p
-					a(href ='/' + eyon.eyon + '/name/') #{eyon.eyon}
+		.row
+			for eyon in eyons
+				.col-sm-4.col-lg-2
+					p
+						a(href ='/' + eyon.eyon + '/name/') #{eyon.eyon}

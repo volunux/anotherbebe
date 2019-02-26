@@ -1,10 +1,19 @@
 doctype html
 html
 	head
-		title= title
-    
-		link(rel='stylesheet' , href='/stylesheets/style.css')
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		link(rel='stylesheet' , href='/stylesheets/boot.css')
+		link(rel='stylesheet' , href='/stylesheets/style-s.css')
 		meta(name ='viewport' content ='width=device-width , initial-sclae=1')
 	body
-		.container
+		.container.py-4
 			block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise

@@ -13,7 +13,7 @@ module.exports = {
 	'names' : (req , res , next) => { url = String(eConfig.reqOptions.url);
 
 			axios.get(url).then((response) => {	data = response.data.status;
-																																				res.render('name/ethnic_names_index' , { 'title': 'List of Names by Ethnic Groups' , 'eyons' : data});				})
+																																				res.render('name/index' , { 'title': 'List of Names by Ethnic Groups' , 'eyons' : data});				})
 	} ,
 
 	'nameEthnic' : (req , res , next) => { eyon = req.params.ethnic.toLowerCase() , title = String('List of ' + eyon[0].toUpperCase() + eyon.slice(1) + ' Names Alphabet');
@@ -21,9 +21,37 @@ module.exports = {
 																										res.render('name/ethnic_name_alphabet' , {'title' : title , 'eyon' : eyon})
 	} ,
 
-	'nameByAlphabet' : (req , res , next) => { ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase() , url = String(nConfig.reqOptions.url + ethnic + '/alphabet/' + alpha) ,
+	'nameByAlphabet' : (req , res , next) => { ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase() , url = String(nConfig.reqOptions.url + ethnic + '/human/alphabet/' + alpha) ,
 
 																							title = String(ethnic[0].toUpperCase() + ethnic.slice(1) + ' Names under Alphabet ' + alpha.toUpperCase());
+
+			axios.get(url).then((response) => {	data = response.data.status;
+
+					res.render('name/ethnic_names_alphabet_detail' , { 'title': title , 'names' : data , 'eyon' : ethnic , 'alpha' : alpha});		})
+											
+										.catch((err) => {			status = err.response;
+																																			res.render('error' , {'title' : 'Error' , 'error' : status});													});
+	} , 
+
+	'nameOfPlantByAlphabet' : (req , res , next) => {
+
+																							ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase() , url = String(nConfig.reqOptions.url + ethnic + '/plant/alphabet/' + alpha) ,
+
+																							title = String('Names of Plants in ' + ethnic[0].toUpperCase() + ethnic.slice(1) + ' under Alphabet ' + alpha.toUpperCase());
+
+			axios.get(url).then((response) => {	data = response.data.status;
+
+					res.render('name/ethnic_names_alphabet_detail' , { 'title': title , 'names' : data , 'eyon' : ethnic , 'alpha' : alpha});		})
+											
+										.catch((err) => {			status = err.response;
+																																			res.render('error' , {'title' : 'Error' , 'error' : status});													});
+	} , 
+
+	'nameOfAnimalByAlphabet' : (req , res , next) => {
+
+																							ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase() , url = String(nConfig.reqOptions.url + ethnic + '/animal/alphabet/' + alpha) ,
+
+																							title = String('Names of Animals in ' + ethnic[0].toUpperCase() + ethnic.slice(1) + ' under Alphabet ' + alpha.toUpperCase());
 
 			axios.get(url).then((response) => {	data = response.data.status;
 
@@ -44,7 +72,24 @@ module.exports = {
 					res.render('name/ethnic_names_gender_detail' , { 'title': title , 'names' : data});		})
 	} , 
 
-	'nameDetail' : (req , res , next) => { 	name = req.params.name , url = String(nConfig.reqOptions.url + name)
+	'nameHuman' : (req , res , next) => {  eyon = req.params.ethnic.toLowerCase() , title = String('List of ' + eyon[0].toUpperCase() + eyon.slice(1) + ' Names by Alphabet');
+
+																				res.render('name/ethnic_name_alphabet' , {'title' : title , 'eyon' : eyon})
+	} , 
+
+
+	'nameAnimal' : (req , res , next) => {  eyon = req.params.ethnic.toLowerCase() , title = String('Names of Animals in ' + eyon[0].toUpperCase() + eyon.slice(1) + ' by Alphabet');
+
+																				res.render('name/animal_names_alphabet' , {'title' : title , 'eyon' : eyon})
+	} , 
+
+
+	'namePlant' : (req , res , next) => {  eyon = req.params.ethnic.toLowerCase() , title = String('Names of Plants in ' + eyon[0].toUpperCase() + eyon.slice(1) + ' by Alphabet');
+
+																				res.render('name/animal_names_alphabet' , {'title' : title , 'eyon' : eyon})
+	} , 
+
+	'nameDetail' : (req , res , next) => { 	name = req.params.name , url = String(nConfig.reqOptions.url + name);
 
 				axios.get(url).then((response) => {	data = response.data.status , title = data.ethnic_group.eyon + ' name ' + data.name
 
@@ -56,11 +101,15 @@ module.exports = {
 
 	'nameAdd' : (req , res , next) => {	url = String(nConfig.reqOptions.url + 'add');
 
-			axios.get(url).then((response) => { 	data = response.data.status ,	eyon = data.Eyon ,	alphabet = data.Alphabet , baby = data.Baby , gender = data.Gender;
+			axios.get(url).then((response) => { console.log(response.data.status.Specie)
+
+			 	data = response.data.status ,	eyon = data.Eyon ,	alphabet = data.Alphabet , baby = data.Baby , gender = data.Gender , specie = data.Specie;
 																					
-																						res.render('forms/add_forms/name_add' , { 'title': 'Add a new Name'  , gender : gender , eyon : eyon , alphabet : alphabet , baby : baby });			})
+																						res.render('forms/add_forms/name_add' , { 'title': 'Add a new Name'  , 'gender' : gender , 'eyon' : eyon , 'alphabet' : alphabet , 'baby' : baby , 'specie' : specie });		})
 										
-										.catch((err) => {				status = err.response;
+										.catch((err) => { console.log(err.response.data);
+
+														status = err.response;
 																																						res.render('error' , {'title' : 'Error' , 'error' : status})																										});
 	} , 
 

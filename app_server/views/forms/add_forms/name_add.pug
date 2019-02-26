@@ -7,25 +7,25 @@ block content
 		h1= title	
 
 		form(method ='post' ,	action ='' enctype ='application/x-www-form-urlencoded')
-			p
+			.form-group
 				label(for ='name') Name * :
-				input(type ='text' id ='name' name ='name' placeholder ='David' required ='true' value =(undefined === name ? '' : name.name))
+				input(type ='text' id ='name' name ='name' class ='form-control form-control-sm' placeholder ='David' required ='true' value =(undefined === name ? '' : name.name))
 
-			p
+			.form-group
 				label(for ='definition') Definition * :
-				textarea(id ='definition' name ='definition' required ='true' ) #{(undefined === name ? '' : name.definition)}
+				textarea(id ='definition' name ='definition' required ='true' class ='form-control form-control-sm' ) #{(undefined === name ? '' : name.definition)}
 
-			p
+			.form-group
 				label(for ='morphology') Morphology * :
-				textarea(id ='morphology' name ='morphology' required ='true' ) #{(undefined === name ? '' : name.morphology)}
+				textarea(id ='morphology' name ='morphology' required ='true' class ='form-control form-control-sm' ) #{(undefined === name ? '' : name.morphology)}
 
-			p
+			.form-group
 				label(for ='gloss') Gloss * :
-				textarea(id ='gloss' name ='gloss' required ='true' ) #{(undefined === name ? '' : name.gloss)}
+				textarea(id ='gloss' name ='gloss' required ='true' class ='form-control form-control-sm' ) #{(undefined === name ? '' : name.gloss)}
 
-			p
+			.form-group
 				label(for ='alphabet') Alphabet * :
-				select(id ='alphabet' name ='alphabet')
+				select(id ='alphabet' name ='alphabet' class ='form-control form-control-sm' )
 					option(value ='') 
 					for letter in alphabet
 						if name
@@ -33,35 +33,45 @@ block content
 						else
 							option(value=letter._id) #{letter.alphabet}
 
-			p
+			.form-group
 				label(for ='ethnic_group') Ethnic Group * :
-				select(id ='ethnic_group' name ='ethnic_group')
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' )
 					option(value ='') 
 					for people in eyon
 						if name
-							option(value =people._id selected =(people._id.toString() == name.ethnic_group._id || people._id.toString() == name.ethnic_group) ? 'selected' : false) #{people.eyon}
+							option(value =people._id class ='form-control'  selected =(people._id.toString() == name.ethnic_group._id || people._id.toString() == name.ethnic_group) ? 'selected' : false) #{people.eyon}
 						else
 							option(value=people._id) #{people.eyon}
 
-			p
+			.form-group
 				label(for ='gender') Gender * :
-				select(id ='gender' name ='gender')
+				select(id ='gender' name ='gender' class ='form-control form-control-sm' )
 					option(value ='') 
 					for type in gender
 						if name
-							option(value =type._id selected =(type._id.toString() == name.gender._id || type._id.toString() == name.gender) ? 'selected' : false) #{type.gender}
+							option(value =type._id class ='form-control'  selected =(type._id.toString() == name.gender._id || type._id.toString() == name.gender) ? 'selected' : false) #{type.gender}
 						else
 							option(value=type._id) #{type.gender}
 
-			p
+			.form-group
+				label(for ='specie') Specie * :
+				select(id ='specie' name ='specie' class ='form-control form-control-sm' )
+					option(value ='') 
+					for type in specie
+						if name
+							option(value =type._id class ='form-control'  selected =(type._id.toString() == name.specie._id || type._id.toString() == name.specie) ? 'selected' : false) #{type.specie}
+						else
+							option(value=type._id) #{type.specie}
+
+			.form-group
 				label(for ='baby') Baby * :
-				select(id ='baby' name ='baby')
+				select(id ='baby' name ='baby' class ='form-control form-control-sm' )
 					option(value ='') 
 					for decision in baby
 						if name
-							option(value =decision._id selected =(decision._id.toString() == name.baby._id || decision._id.toString() == name.baby) ? 'selected' : false) #{decision.baby}
+							option(value =decision._id class ='form-control'  selected =(decision._id.toString() == name.baby._id || decision._id.toString() == name.baby) ? 'selected' : false) #{decision.baby}
 						else
 							option(value=decision._id) #{decision.baby}
 
 			p
-				button(type ='submit' title ='Submit') Submit
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit
