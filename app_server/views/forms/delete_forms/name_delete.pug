@@ -1,11 +1,11 @@
-extends ../../name_layout
+extends ../../layout
 
 block content
 
-	.ndelete
+	.delete
 		
 		form(action =''	, method ='post' , enctype ='application/x-www-form-urlencoded')
 
-			p.del Do you want to delete and remove this name, #{name.name}? 
+			p.del Do you want to delete or remove this name, #{name.name}? 
 
-			button(type ='submit' , title ='Confirm') Confirm
+			button(type ='submit' , title ='Confirm' class ='btn btn-primary float-right px-4') Confirm

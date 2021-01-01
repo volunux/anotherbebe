@@ -1,0 +1,19 @@
+extends ../layouts/name_layout
+
+block content
+
+	.ethnic-list
+
+		ul
+
+			if eyons
+
+				for eyon in eyons
+
+					.ethnic-list-item
+
+						li
+							a(href ='/name/nation/' + eyon._id.toLowerCase()) #{eyon._id}
+
+				else
+					p Ethnic Group entries not available.

@@ -2,94 +2,100 @@ var Gender = require('../models/gender') , config = require('../config/db') , as
 
 module.exports = {
 
-	'genderName' : (req , res) => {	gValue = req.params.gender;
+	'genderName' : (req , res) => {	gender = req.params.gender;
 			
-			Gender.findOne({'gender' : new RegExp(gValue, 'i')})
-																													.exec((err , genderName) => {
-																																												if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																												if (!genderName) {
+			Gender.findOne({'gender' : new RegExp(gender , 'i')})
+																														.exec((err , genderResult) => {
 
-																																																						config.response(res , 404 , {'message' : '404'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , genderName);
-																																		});
-	},
+																																if (err) {
+																																										config.response(res , 400 , err);
+																																																											return false;	}
+																															if (!genderResult) {
+																																										config.response(res , 404 , {'message' : 'Gender entry does not exist in the record or is not available.'});
+																																																																																																	return false;		}
+																																										config.response(res , 200 , genderResult);		});
+	} ,
 
 	'genderList' : (req , res) => {	
-																	Gender.find({})
-																									.exec(function(err , genderResult) {
-																																											if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																											if (!genderResult) {
-																																																						config.response(res , 404 , {'message' : 'genders cannot be found'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , genderResult);
-																						});
-	},
 
-	'genderDetail' : (req , res) => {		gValue = req.params.gender;	
+			Gender.find({})
+											.lean({})
+
+											.select('_id')
+
+											.hint({'_id' : 1})
+
+											.exec((err , entryResult) => {
+																					
+																						if (err) {
+																																								return config.errResponse(res , 400 , err);		}
+																						if (entryResult.length == 0) {
+																																								return config.response(res , 404 , {'message' : 'Gender entries does not exists in the record or is not available.'});		}
+
+																																								return config.response(res , 200 , entryResult);				});
+	} ,
+
+	'genderDetail' : (req , res) => {		gender = req.params.gender;	
 
 				if (req.params && req.params.gender) {
 																			
-			async.waterfall([
-				
-				(callback) => {
-																Gender.findOne({'gender' : new RegExp(gValue, 'i')})
-																																									.exec((err , genderResult) => {
-																																																									callback(null , genderResult);	});
-																																																	}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																													return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Titles not available for this gender'});
-																																																																					return;		}
-																												config.response(res , 200 , finalResult);																																														});
-																			} else {
-																									config.response(res , 404 , {'message' : 'No gender id found'});		}
-	},
+		Gender.findOne({'gender' : new RegExp(gender , 'i')})
+																															.exec((err , genderResult) => {
 
-	'genderAdd' : (req , res) => {		gValue = req.body , gender = new Gender(gValue);
+																									if (err) {
+																																			config.compiledError(res , 400 , err);
+																																																							return false;	}
+																							if (!genderResult) {
+																																			config.response(res , 404 , {'message' : 'Gender entry does not exist in the record or is not available.'});
+																																																																																										return false;		}
+																																			config.response(res , 200 , genderResult);				});
+			} else {
+								config.response(res , 404 , {'message' : 'No gender id provided. Please provide a valid gender id.'});		}
+	} ,
+
+	'genderAdd' : (req , res) => { gender = new Gender(req.body);
 			
-			gender.save(function(err , genderResult) {
-																								if (err) {
-																														config.response(res , 404 , err);
-																																															return;	}
-																														
-																														config.response(res , 200 , genderResult);																																												});
-	},
+			gender.save((err , genderResult) => {
+																						if (err) {
+																												config.response(res , 400 , err);
+																																																		return false;	}																												
+																												config.response(res , 200 , genderResult);										});
+	} ,
 
-	'genderUpdate' : (req , res) => {	gValue = req.body.gender , gParam = req.params.gender;
-
-					if (req.params && req.params.gender) {
-
-			Gender.findOneAndUpdate({'gender' : new RegExp(gParam, 'i')} , gValue , (err) => {
-																																												if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
-
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-													}
-														else {
-																			config.response(res , 404 , {'message' : 'No gender id found'});		}
-	},
-
-	'genderDelete' : (req , res) => {	gParam = req.params.gender;
+	'genderUpdate' : (req , res) => {	gValue = req.body.gender , gender = req.params.gender;
 
 				if (req.params && req.params.gender) {
 
-			Gender.findOneAndRemove({'gender' : new RegExp(gParam, 'i')} , function(err) {
-																																											if (err) {
-																																																	config.response(res , 404 , err);
-																																																																		return;	}
+				Gender.findOne({'gender' : new RegExp(gender , 'i')} , (err , gender) => {
+					
+																																							if (!gender) {	return config.response(res , 404 , {'message' : 'Gender entry does not exist in the record or is not available.'});	}
+				Gender.findOneAndUpdate({'gender' : new RegExp(gender , 'i')} , 
 
-																																																	config.response(res , 204 , {'message' : 'Successful request.'});														});
-												} else {
-																	config.response(res , 404 , {'message' : 'No gender id found'});		}
-	},
+							{'$set' : gValue} , {'new' : true , 'runValidators' : true} , (err , genderResult) => {
+																																																				if (err) {																																													
+																																																										config.compiledError(res , 400 , err);
+																																																																																return false;	}
+																																																										config.response(res , 201 , genderResult);										});		});
+			} else {
+								config.response(res , 404 , {'message' : 'No gender id provided. Please provide a valid gender id.'});		}
+	} ,
+
+	'genderDelete' : (req , res) => {	gender = req.params.gender;
+
+		if (req.params.gender) {
+				
+			Gender.findOne({'gender' : new RegExp(gender , 'i')} , (err , gender) => {
+
+																																							if (!gender) {
+																																															return config.response(res , 404 , {'message' : 'Gender entry does not exist in the record or is not available.'});	}
+																		gender.remove((err , genderResult) => {
+																																							if (err) {
+																																													config.compiledError(res , 400 , err);
+																																																																	return false;		}
+
+																																									return	config.response(res , 204 , {'message' : 'Entry successfully removed from the record.'});		})			});
+			} 	else {
+									config.response(res , 404 , {'message' : 'No gender id provided. Please provide a valid gender id.'});		}
+	}
 
 }

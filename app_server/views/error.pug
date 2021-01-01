@@ -1,8 +1,35 @@
-extends layout
+extends ./layouts/error_layout
 
 block content
-		if (error.status == 404) 
-			p #{error.status} - The page you are looking for does not exist.
-			
-		else
-			p #{error.status} - Internal Server Error Occured.
+	
+	.errors
+		if error
+			if error.status
+				if (error.status == 404) && (error.data !== undefined)
+					p #{error.status} - #{error.data.message}
+				
+				else if (error.status == 404)				
+					p #{error.status} - The page you are looking for does not exist.
+
+				else if (error.status == 500)
+					p #{error.status} - Internal and Server error occured
+
+				else if (error.status == 400)
+					p #{error.status} - 
+						if error.data.message
+							| #{error.data.message}
+						else
+							| Bad Request
+
+				else if (error.status == 401)
+					p #{error.status} - Access Denied because of lack of authentication.
+					p
+						a(href ='/signin') Sign in Please or
+					p
+						a(href ='/signup') Sign up for an account
+
+				else if (error.status == 403)
+					p #{error.status} - Unauthorized action.
+
+			else
+				p An Error has occured. Please try again.

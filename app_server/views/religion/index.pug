@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+	.ethnic-list
+		ul
+			for eyon in eyons
+				.ethnic-list-item
+					li
+						a(href ='/' + eyon.eyon.toLowerCase() + '/religion/') #{eyon.eyon}

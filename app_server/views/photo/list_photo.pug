@@ -1,0 +1,48 @@
+extends ../layouts/photo_layout
+
+block content
+
+	.photo-list
+
+		if photos
+
+			for photo in photos
+
+				.photo-item
+			
+					.photo-item-photo
+			
+						a(href = '/photo/' + photo.slug)
+			
+							img(src =photo.photo_detail.location alt =photo.title title =photo.title)
+					
+					if photo.title
+			
+						p 
+							b Title : 
+			
+							a(href='/photo/' + photo.slug) #{photo.title}
+
+					if photo.ethnic_group	
+			
+						p Ethnic Group : #{photo.ethnic_group}
+
+					if photo.country	
+			
+						p Country : #{photo.country}
+						
+					if photo.century
+			
+						p Period : #{photo.century}
+
+					if photo.continent
+			
+						p Continent : #{photo.continent}
+
+					if photo.region	
+			
+						p Region : #{photo.region}
+
+
+			else
+				p No Photos available.

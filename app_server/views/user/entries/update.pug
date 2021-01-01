@@ -1,0 +1,198 @@
+extends ../../user_layout
+
+block content
+
+	.entries
+
+		if arts
+			if arts
+				ul
+					for art in arts
+						li
+							a(href ='/update/art/' + art.url) #{art.title}
+			else
+				p You have no entries in this category.
+
+
+		if books
+			if books
+				ul
+					for book in books
+						li
+							a(href ='/update/book/' + book.url) #{book.title}
+			else
+				p You have no entries in this category.
+
+
+		if dresses
+			if dresses
+				ul
+					for dress in dresses
+						li
+							a(href ='/update/dress/' + dress.url) #{dress.title}
+			else
+				p You have no entries in this category.
+
+
+		if festivals
+			if festivals
+				ul
+					for festival in festivals
+						li
+							a(href ='/update/festival/' + festival.url) #{festival.title}
+			else
+				p You have no entries in this category.
+
+
+		if folktales
+			if folktales
+				ul
+					for folktale in folktales
+						li
+							a(href ='/update/folktale/' + folktale.url) #{folktale.title}
+			else
+				p You have no entries in this category.
+
+
+		if foods
+			if foods
+				ul
+					for food in foods
+						li
+							a(href ='/update/food/' + food.url) #{food.title}
+			else
+				p You have no entries in this category.
+
+
+		if histories
+			if histories
+				ul
+					for history in histories
+						li
+							a(href ='/update/history/' + history.url) #{history.title}
+			else
+				p You have no entries in this category.
+
+
+		if individuals
+			if individuals
+				ul
+					for individual in individuals
+						li
+							a(href ='/update/individual/' + individual.url) #{individual.title}
+			else
+				p You have no entries in this category.
+
+
+		if laws
+			if laws
+				ul
+					for law in laws
+						li
+							a(href ='/update/law/' + law.url) #{law.title}
+			else
+				p You have no entries in this category.
+
+
+		if legends
+			if legends
+				ul
+					for legend in legends
+						li
+							a(href ='/update/legend/' + legend.url) #{legend.title}
+			else
+				p You have no entries in this category.
+
+
+		if lifes
+			if lifes
+				ul
+					for life in lifes
+						li
+							a(href ='/update/life/' + life.url) #{life.title}
+							p
+								a(href ='/update/life/' + life.url) Update
+								a(href ='/delete/life/' + life.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if mythologies
+			if mythologies
+				ul
+					for mythology in mythologies
+						li
+							a(href ='/update/mythology/' + mythology.url) #{mythology.title}
+			else
+				p You have no entries in this category.
+
+
+		if names
+			if names
+				ul
+					for name in names
+						- var nameSpecie = name.specie.specie.toLowerCase()
+							if (nameSpecie == 'human')
+								li
+									a(href ='/update/name/nation/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+
+							if (nameSpecie == 'animal')
+									li
+										a(href ='/update/name/animal/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+
+							if (nameSpecie == 'plant')
+								li
+									a(href ='/update/name/plant/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+			else
+				p You have no entries in this category.
+
+
+		if photos
+			if photos
+				ul
+					for photo in photos
+						li
+							a(href ='/update/photo/' + photo.url) #{photo.title}
+			else
+				p You have no entries in this category.
+
+
+		if religions
+			if religions
+				ul
+					for religion in religions
+						li
+							a(href ='/update/religion/' + religion.url) #{religion.title}
+			else
+				p You have no entries in this category.
+
+
+		if sounds
+			if sounds
+				ul
+					for sound in sounds
+						li
+							a(href ='/update/sound/' + sound.url) #{sound.title}
+			else
+				p You have no entries in this category.
+
+
+		if videos
+			if videos
+				ul
+					for video in videos
+						li
+							a(href ='/update/video/' + video.url) #{video.title}
+			else
+				p You have no entries in this category.
+
+
+		if proverbs
+			if proverbs
+				ul
+					for proverb in proverbs
+						li
+							a(href ='/update/proverb/' + proverb.url) #{proverb.title}
+			else
+				p You have no entries in this category.
+

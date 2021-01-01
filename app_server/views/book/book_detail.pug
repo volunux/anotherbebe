@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+
+	.post-item
+
+		if book
+			p !{(book.about)}
+			
+			p
+				b Ethnic Group : 
+				| #{book.ethnic_group.eyon}

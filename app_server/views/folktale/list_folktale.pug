@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if folktales
+			for folktale in folktales
+				.list-posts-item
+					h2
+						a(href ='/folktale/' + folktale.url) #{folktale.title}
+					p Ethnic Group Name : #{folktale.ethnic_group.eyon}
+
+			else
+				p No Folktale resource available for this ethnic group.

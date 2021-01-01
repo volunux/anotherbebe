@@ -1,0 +1,32 @@
+extends ../user_layout
+
+include ../includes/image
+
+block content
+
+	.profile-detail
+
+
+		if user
+			.photo-photo-detail
+				img(class ='img-fluid rounded d-block photo-detail', src =user.profile_photo.location)
+
+		p Full Name : #{user.full_name}
+
+		p Username : #{user.username}
+
+		p E-mail Address : #{user.email_address}
+
+		p About : #{user.about}
+
+		p Country : #{user.country.name}
+
+		p Ethnicity : #{user.ethnic_group.eyon}
+
+		p Last Logged in date : #{user.last_loggedIn}
+
+		p Joined Date : #{user.created_on}
+
+		p Status : #{user.role}
+
+		a.edit(href ='/user/profile/edit' class ='btn btn-primary float-right px-4' title ='Update Profile') Update Profile

@@ -1,0 +1,26 @@
+extends ../layout
+
+block content
+
+	.list-user
+
+		table
+			thead 
+				tr
+					td List of Users
+
+			tbody
+				tr
+					td #{user.username}
+					td #{user.email_address}
+					td #{user.full_name}
+					td #{user.ethnic_group}
+					td #{user.country}
+					td #{user.role}
+					td
+						a(href ='/admin/update/profile/' + user._id) Update
+						a(href ='/admin/delete/profile/' + user._id) Delete
+
+			tfoot
+				tr
+					td End of List.

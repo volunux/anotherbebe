@@ -1,0 +1,14 @@
+extends ../layouts/photo_layout
+
+block content
+
+	.ethnic-list
+
+		ul
+
+			for eyon in eyons
+
+				.ethnic-list-item
+
+					li
+						a(href =`/photo/nation/${eyon._id.toLowerCase().split(' ').join('-')}`) #{eyon._id}

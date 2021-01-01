@@ -1,0 +1,64 @@
+extends ../forms/layouts/addlayout
+
+block content
+	
+	.name-add
+
+		if errors
+			p Errors found trying to process form. These include : -
+			ul.alert.alert-danger.errors
+				for error in errors
+					if error.msg
+						li!= error.msg
+					else if error.message
+						li!= error.message
+					else
+						li!= error.status
+
+
+		form(method ='post' ,	action ='' enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='full_name') Full Name * :
+				input(type ='text' id ='full_name' name ='full_name' class ='form-control form-control-sm' placeholder ='Viktor' value =(undefined === user ? '' : user.full_name))
+
+			.form-group
+				label(for ='ethnic_group') Ethnicity * : 
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' required ='true')
+					option(value ='') 
+					for people in eyons
+						if user
+							if user.ethnic_group
+								option(value =people._id class ='form-control'  selected =(people._id.toString() == user.ethnic_group._id || people._id.toString() == user.ethnic_group) ? 'selected' : false) #{people.eyon}
+							else
+								option(value=people._id) #{people.eyon}
+						else
+							option(value=people._id) #{people.eyon}
+
+			.form-group
+				label(for ='country') Country * : 
+				select(id ='country' name ='country' class ='form-control form-control-sm' required ='true')
+					option(value ='') 
+					for country in countries
+						if user
+							if user.country
+								option(value =country._id class ='form-control'  selected =(country._id.toString() == user.country._id || country._id.toString() == user.country) ? 'selected' : false) #{country.name}
+							else	
+								option(value=country._id) #{country.name}
+						else
+							option(value=country._id) #{country.name}
+
+			.form-group
+				label(for ='email') Email * :
+				input(type ='text' id ='email' name ='email_address' class ='form-control form-control-sm' placeholder ='david@example.com' value =(undefined === user ? '' : user.email_address))
+
+			.form-group
+				label(for ='password') Password * :
+				input(type ='password' id ='password' name ='password' class ='form-control form-control-sm' placeholder ='*****************' value =(undefined === user ? '' : user.password))
+
+			.form-group
+				label(for='about') About :
+				textarea(id ='about' name ='about' class ='form-control form-control-sm') #{(undefined === user ? '' : user.about)}
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit

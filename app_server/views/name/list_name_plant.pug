@@ -1,0 +1,19 @@
+extends ../layouts/name_layout
+
+block content
+
+	.name-list
+
+		if names
+
+			for name in names
+
+				.name-item
+
+					p 
+						a(href ='/name/plant/' + name.ethnic_group.toLowerCase() + '/' + name.name.toLowerCase()) #{name.name}
+
+					p Ethnic Group : #{name.ethnic_group}
+
+			else
+				p Plant Name entries available for this Ethnic Group.

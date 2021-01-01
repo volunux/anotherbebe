@@ -1,20 +1,20 @@
-var express = require('express'),			router = express.Router(),		eyon = require('../controllers/eyon');
+var router = require('express').Router() , eyon = require('../controllers/eyon');
 
 
 
-router.get('/eyon'									,		eyon.eyonList);
+router.get('/eyon'																				,										eyon.eyonList);
 
-router.get('/eyon/name/:eyon'				,		eyon.eyonName);
+router.get('/eyon/name/:eyon'															,										eyon.eyonName);
 
-router.post('/eyon'									,		eyon.eyonAdd);	
+router.post('/eyon'																				,										eyon.eyonAdd);	
 
 
 
-router.get('/eyon/:eyon'						,		eyon.eyonDetail);
+router.get('/eyon/d/:eyon'																,										eyon.eyonDetail);
 
-router.put('/eyon/:eyon'						,		eyon.eyonUpdate);
+router.put('/eyon/:eyon'																	,										eyon.eyonUpdate);
 
-router.delete('/eyon/:eyon'					,		eyon.eyonDelete);
+router.delete('/eyon/:eyon'																,										eyon.eyonDelete);
 
 
 

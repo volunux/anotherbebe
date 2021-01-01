@@ -1,0 +1,41 @@
+extends layout
+
+block content
+	
+	.list-posts
+
+		if arts
+			for art in arts
+				.list-posts-item
+					h2
+						a(href ='/art/' + art.url) #{art.title}
+					p Ethnic Group Name : #{art.ethnic_group.eyon}
+
+		if foods
+			for food in foods
+				.list-posts-item
+					h2
+						a(href ='/food/' + food.url) #{food.title}
+					p Ethnic Group Name : #{food.ethnic_group.eyon}
+
+		if lifes
+			for life in lifes
+				.list-posts-item
+					h2
+						a(href ='/life/' + life.url) #{life.title}
+					p Ethnic Group Name : #{life.ethnic_group.eyon}
+
+		if festivals
+			for festival in festivals
+				.list-posts-item
+					h2
+						a(href ='/festival/' + festival.url) #{festival.title}
+					p Ethnic Group Name : #{festival.ethnic_group.eyon}
+
+		if folktales
+			for folktale in folktales
+				.list-posts-item
+					h2
+						a(href ='/folktale/' + folktale.url) #{folktale.title}
+					p Ethnic Group Name : #{folktale.ethnic_group.eyon}
+

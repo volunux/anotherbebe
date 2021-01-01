@@ -1,95 +1,101 @@
-var Specie = require('../models/specie') , config = require('../config/db') , async = require('async') , sValue = '' , specie = '' , sParam = '';
+var Specie = require('../models/specie') , config = require('../config/config') , async = require('async') , sValue = '' , specie = '' , sParam = '';
 
 module.exports = {
 
-	'specieName' : (req , res) => {	sValue = req.params.specie;
+	'specieName' : (req , res) => {	specie = req.params.specie;
 			
-			Specie.findOne({'specie' : new RegExp(sValue, 'i')})
-																													.exec((err , specieName) => {
-																																												if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																												if (!specieName) {
+			Specie.findOne({'specie' : new RegExp(specie , 'i')})
+																														.exec((err , specieResult) => {
 
-																																																						config.response(res , 404 , {'message' : '404'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , specieName);
-																																		});
-	},
+																														if (err) {
+																																								config.compiledError(res , 400 , err);
+																																																												return false;	}
+																												if (!specieResult) {
+																																								config.response(res , 404 , {'message' : 'Specie entry does not exist in the record or is not available.'});
+																																																																																															return false;		}
+																																								config.response(res , 200 , specieResult);					});
+	} ,
 
 	'specieList' : (req , res) => {	
-																	Specie.find({})
-																									.exec(function(err , specieResult) {
-																																											if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																											if (!specieResult) {
-																																																						config.response(res , 404 , {'message' : 'species cannot be found'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , specieResult);
-																						});
-	},
+			
+			Specie.find({})
+											.lean({})
 
-	'specieDetail' : (req , res) => {		sValue = req.params.specie;	
+											.select('_id')
+
+											.hint({'_id' : 1})
+
+											.exec((err , entryResult) => {
+																					
+																						if (err) {
+																																								return config.errResponse(res , 400 , err);		}
+																						if (entryResult.length == 0) {
+																																								return config.response(res , 404 , {'message' : 'Specie entries does not exists in the record or is not available.'});		}
+
+																																								return config.response(res , 200 , entryResult);				});
+	} ,
+
+	'specieDetail' : (req , res) => {		specie = req.params.specie;	
 
 				if (req.params && req.params.specie) {
 																			
-			async.waterfall([
-				
-				(callback) => {
-																Specie.findOne({'specie' : new RegExp(sValue, 'i')})
-																																										.exec((err , specieResult) => {
-																																																										callback(null , specieResult);	});
-																																																	}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																													return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Titles not available for this specie'});
-																																																																					return;		}
-																												config.response(res , 200 , finalResult);																																														});
-																			} else {
-																									config.response(res , 404 , {'message' : 'No specie id found'});		}
-	},
+		Specie.findOne({'specie' : new RegExp(specie , 'i')})
+																													.exec((err , specieResult) => {
 
-	'specieAdd' : (req , res) => {		sValue = req.body , specie = new Specie(sValue); 
+																									if (err) {
+																																			config.compiledError(res , 400 , err);
+																																																							return false;	}
+																							if (!specieResult) {
+																																			config.response(res , 404 , {'message' : 'Specie entry does not exist in the record or is not available.'});
+																																																																																										return false;		}
+																																			config.response(res , 200 , specieResult);				});
+			} else {
+								config.response(res , 404 , {'message' : 'No specie id provided. Please provide a valid specie id.'});		}
+	} ,
 
-			specie.save(function(err , specieResult) {
-																								if (err) {
-																														config.response(res , 404 , err);
-																																															return;	}
-																														
-																														config.response(res , 200 , specieResult);																																												});
-	},
+	'specieAdd' : (req , res) => {	specie = new Specie(req.body);
+			
+			specie.save((err , specieResult) => {
+																							if (err) {
+																													config.compiledError(res , 400 , err);
+																																																				return false;	}		
+																													config.response(res , 200 , specieResult);											});
+	} ,
 
-	'specieUpdate' : (req , res) => {	sValue = req.body.specie , sParam = req.params.specie;
-
-					if (req.params && req.params.specie) {
-
-			Specie.findOneAndUpdate({'specie' : new RegExp(sParam, 'i')} , sValue , (err) => {
-																																												if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
-
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-													}
-														else {
-																			config.response(res , 404 , {'message' : 'No specie id found'});		}
-	},
-
-	'specieDelete' : (req , res) => {	sParam = req.params.specie;
+	'specieUpdate' : (req , res) => {	sValue = req.body.specie , specie = req.params.specie;
 
 				if (req.params && req.params.specie) {
 
-			Specie.findOneAndRemove({'specie' : new RegExp(sParam, 'i')} , function(err) {
-																																											if (err) {
-																																																	config.response(res , 404 , err);
-																																																																		return;	}
+				Specie.findOne({'specie' : new RegExp(specie , 'i')} , (err , specie) => {
 
-																																																	config.response(res , 204 , {'message' : 'Successful request.'});														});
-												} else {
-																	config.response(res , 404 , {'message' : 'No specie id found'});		}
-	},
+																																						if (!specie) {	return config.response(res , 404 , {'message' : 'Specie entry does not exist in the record or is not available.'});	}
+				Specie.findOneAndUpdate({'specie' : new RegExp(specie , 'i')} , 
+
+									{'$set' : sValue} , {'new' : true , 'runValidators' : true} , (err , specieResult) => {
+																																																						if (err) {																																													
+																																																												config.compiledError(res , 400 , err);
+																																																																																			return false;	}
+																																																												config.response(res , 201 , specieResult);											});		});
+			} else {
+								config.response(res , 404 , {'message' : 'No specie id provided. Please provide a valid specie id.'});		}
+	} ,
+
+	'specieDelete' : (req , res) => {	specie = req.params.specie;
+
+		if (req.params.specie) {
+				
+				Specie.findOne({'specie' : new RegExp(specie , 'i')} , (err , specie) => {
+																																					
+																																						if (!specie) {
+																																														return config.response(res , 404 , {'message' : 'Specie entry does not exist in the record or is not available.'});	}
+														specie.remove((err , specieResult) => {
+																																					if (err) {
+																																											config.compiledError(res , 400 , err);
+																																																															return false;		}
+
+																																							return	config.response(res , 204 , {'message' : 'Entry successfully removed from the record.'});		})			});
+			} 	else {
+									config.response(res , 404 , {'message' : 'No specie id provided. Please provide a valid specie id.'});		}
+	} 
 
 }

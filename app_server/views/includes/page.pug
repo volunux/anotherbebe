@@ -1,0 +1,42 @@
+mixin header
+
+	header(id = 'header')
+
+		h1 #{title}
+
+		nav(id ='nav')
+		
+			ul
+
+				li
+					a(href ='/') Home
+
+				li
+					a(href ='/country') Country
+
+				li
+					a(href ='/nation') People
+				
+				if isLoggedIn
+					li
+						a(href ='/user/dashboard') Dashboard
+
+		include ./breadcrumb
+
+
+
+mixin footer
+
+	footer(id ='footer')
+
+		p Copyright &copy; #{currentYear} All Right Reserved.
+		
+		p Published by V Enterprise
+
+
+
+mixin headSection
+
+		link(rel='stylesheet' , href='/stylesheets/add.css')
+		
+		meta(name ='viewport' content ='width=device-width , initial-scale=1.0')

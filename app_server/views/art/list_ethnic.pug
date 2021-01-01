@@ -1,0 +1,17 @@
+extends ../layout
+
+block content
+
+	.ethnic-list
+
+		ul
+
+			if eyons
+
+				for eyon in eyons
+					.ethnic-list-item
+						li
+							a(href =`/art/nation/${eyon._id.toLowerCase().split(' ').join('-')}`) #{eyon._id}
+
+				else
+					p No Ethnic Groups available.

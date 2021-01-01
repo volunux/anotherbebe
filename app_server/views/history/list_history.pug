@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if historys
+			for history in historys
+				.list-posts-item
+					h2
+						a(href ='/history/' + history.url) #{history.title}
+					p Ethnic Group Name : #{history.ethnic_group.eyon}
+
+			else
+				p No History resource available for this ethnic group.

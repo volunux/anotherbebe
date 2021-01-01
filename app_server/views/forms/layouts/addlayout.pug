@@ -1,0 +1,45 @@
+include ../includes/top
+
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		+headSection
+	
+	body
+	
+		.container
+
+			.header
+
+				h1 #{title}
+
+				.nav
+					ul
+						li
+							a(href ='/') Home
+						li
+							a(href ='/country') Country
+						li
+							a(href ='/nation') People
+						if isLoggedIn
+							li
+								a(href ='/user/dashboard') Dashboard
+			
+			.main
+				block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise
+		
+
+// -
+			script(src ='/js/jquery.js' type ='text/javascript')
+			script(src ='/js/forms/photo_object.js' type ='text/javascript')
+			script(src ='/js/texteditor.js')

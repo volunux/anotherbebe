@@ -1,0 +1,67 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+	
+	.post-item
+	
+		if legend
+			.photo-photo-detail
+				img(src =legend.photo_detail.location alt =legend.title title =legend.title)
+			
+			if legend.title
+				p 
+					b Title 
+					| : !{legend.title}
+			
+			if legend.date
+				p 
+					b Date 
+					| : !{legend.date}
+			
+			if legend.century
+				p 
+					b Period
+					| : !{legend.century}
+			
+			if legend.genre
+				p 
+					b Category
+					| : !{legend.genre}
+			
+			if legend.country
+				p
+					b Country 
+					| : !{legend.country}
+			
+			if legend.continent
+				p 
+					b Continent 
+					| : !{legend.continent}
+			
+			if legend.region
+				p 
+					b Region 
+					| : !{legend.region}
+			
+			if legend.ethnic_group
+				p
+					b Ethnic Group 
+					| : !{legend.ethnic_group}
+
+			if legend.legend_body
+				p 
+					b Legends 
+					| : !{(legend.legend_body).replace(/\n/g, '<br/>')}
+
+			if legend.author
+				p 
+					b Published by 
+					| : !{legend.author.full_name}
+				
+			if legend.votes
+				p 
+					b Votes		 
+					| : !{legend.votes.votes}
+

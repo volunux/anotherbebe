@@ -1,0 +1,27 @@
+Remind me if i should use add or update for error in update
+
+Plant details problem and Animal Details Problem
+
+User could still access resources even after signed out
+
+How to return only author's name on resource response without other details
+
+How to allow editing of profile if only session id and object id match
+
+Don't forget to lowercase stop words when capitalizing string fields.
+
+Show button if user owner of the entry
+
+Delete Images of Articles
+
+Make sure you correct slug structure
+
+Save draft of entry before exit by user
+
+
+New anomaly detected, comment saving despite without author
+
+FFile proving stubborn to be deleted.
+
+https://s3."+f.opts.imageUploadToS3.region+".amazonaws.com/"+f.opts.imageUploadToS3.bucket
+

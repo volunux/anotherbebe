@@ -1,6 +1,6 @@
 module.exports = {
 
-		'reqOptions' : {		'url' : 'http://lit-earth-39638.herokuapp.com/api/oruko/' ,
+		'reqOptions' : {		'url' : 'http://localhost:3000/api/oruko/' ,
 																																		'method' : 'GET' ,
 																																												'json' : {},
 																																																			'qs' : {}			}

@@ -1,0 +1,15 @@
+extends ../layouts/photo_layout
+
+block content
+
+	.country-list
+	
+		ul
+
+			for country in countries
+		
+				.country-list-item
+		
+					li
+
+						a(href =`/photo/country/${country._id.toLowerCase().split(' ').join('-')}`) #{country._id}

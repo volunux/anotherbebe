@@ -1,0 +1,18 @@
+extends ../layout
+
+include ../includes/video
+
+block content
+
+	.list-video
+		for video in videos
+			.list-video-item
+				.list-video-item-video
+					a(href = '/video/' + video['url'])
+						+fixDir(video.video_detail.path)
+				p 
+					b Title : 
+					a(href='/video/' + video['url']) #{video.title}
+				p Period : #{video.genre.genre}
+				p Continent : #{video.continent.name}
+				p Country : #{video.country.name}

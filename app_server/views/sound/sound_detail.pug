@@ -1,0 +1,57 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+
+	.sound-detail
+			//	
+					if sound
+						.sound-sound-detail
+							+fixDir(sound.sound_detail.path)
+			
+			if sound.title
+				p 
+					b Title 
+					| : #{sound.title}
+			if sound.date
+				p 
+					b Date 
+					| : #{sound.date}
+			if sound.century
+				p 
+					b Period
+					| : #{sound.century.century} Century
+			if sound.genre
+				p 
+					b Category
+					| : #{sound.genre.genre}
+			if sound.country
+				p
+					b Country 
+					| : #{sound.country.name}
+			if sound.continent
+				p 
+					b Continent 
+					| : #{sound.continent.name}
+			if sound.region
+				p 
+					b Region 
+					| : #{sound.region.name}
+			if sound.ethnic_group
+				p
+					b Ethnic Group 
+					| : #{sound.ethnic_group.eyon}
+			if sound.artist
+				p 
+					b Artist 
+					| : #{sound.artist}
+			if sound.about
+				p 
+					b About 
+					| : #{sound.about}
+			if sound.vote !== 0
+				p Likes : sound.vote
+
+
+			button(class ='like') Vote for this Image

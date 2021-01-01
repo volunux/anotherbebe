@@ -1,0 +1,15 @@
+extends ../layouts/layout
+
+block content
+	
+	.form-add
+		form(action = '' , method ='post' , enctype ='application/x-www-form-urlencoded')
+			#editor
+				
+
+			p
+				input#pvalue(type='' name ='art_markup')
+				input#plvalue(type='' name ='art_body')
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit

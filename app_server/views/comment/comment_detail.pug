@@ -1,0 +1,45 @@
+extends ../layout
+
+include ../includes/format_date
+
+block content
+
+	.comment
+		p.author #{comment.author.full_name}
+			small.timestamp 
+				+dateFormatted(comment.updatedAt)
+		div(class ='commentBody')
+			p.text !{(comment.text).replace(/\n/g, '<br/>')}
+				if uIdentity
+					small
+						a(id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/update` : '#' ) Edit
+						a(id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/delete` : '#' ) Delete
+			if (comment.votes)
+				p 
+					b Votes :
+					| #{comment.votes.votes}
+			if (comment.replies != 0)
+				.replies
+					each reply , j in comment.replies
+						.reply
+							p
+								b : #{j + 1}
+							p.author 
+								b
+									if reply.author 
+										| #{reply.author.full_name}
+										
+									else
+										| Anonymous
+								small.timestamp 
+									+dateFormatted(comment.updatedAt)
+							p.text !{(reply.text).replace(/\n/g, '<br/>')}
+								if uIdentity
+									small
+										a(id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/update` : '#' ) Edit
+										a(id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/delete` : '#' ) Delete
+
+							if (reply.votes)
+								p 
+									b Votes :
+									| #{reply.votes.votes}

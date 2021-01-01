@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if laws
+			for law in laws
+				.list-posts-item
+					h2
+						a(href ='/law/' + law.url) #{law.title}
+					p Ethnic Group Name : #{law.ethnic_group.eyon}
+
+			else
+				p No Law resource available for this ethnic group.

@@ -1,0 +1,24 @@
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		link(rel='stylesheet' , href='/stylesheets/css.css')
+		meta(name ='viewport' content ='width=device-width , initial-scale=1')
+	body
+		.container
+
+			.header
+
+				h1 #{title}
+			
+			.main
+				block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise

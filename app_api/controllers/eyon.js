@@ -1,96 +1,106 @@
-var Eyon = require('../models/eyon') , config = require('../config/db') , async = require('async') , eValue = '' , eyon = '' , eParam = '';
+const async = require('async');
+
+const config = require('../config/config');
+
+var Eyon = require('../models/eyon') , eValue = '' , eyon = '' , eParam = '';
 
 module.exports = {
 
-	'eyonName' : (req , res) => {	eValue = req.params.eyon;
+	'eyonName' : (req , res) => {	eyon = req.params.eyon;
 			
-			Eyon.findOne({'eyon' : new RegExp(eValue, 'i')})
-																													.exec((err , eyonName) => {
-																																												if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																												if (!eyonName) {
+			Eyon.findOne({'_id' : eyon })
+																		.lean({})
 
-																																																						config.response(res , 404 , {'message' : '404'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , eyonName);
-																																		});
-	},
+																		.exec((err , entryResult) => {
 
-	'eyonList' : (req , res) => {	
-		
-		Eyon.find({})
-									.exec((err , eyonResult) => {
-																								if (err) {
-																																			config.response(res , 404 , err);
-																																																				return;	}
-																								if (!eyonResult) {
-																																			config.response(res , 404 , {'message' : 'Ethnic Groups not available.'});
-																																																																									return;		}
-																																			config.response(res , 200 , eyonResult);
-																						});
-	},
+																					if (err) {
+																												return config.errResponse(res , 400 , err);		}
+																	if (!entryResult) {
+																												return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record is not available.`});		}
 
-	'eyonDetail' : (req , res) => {		eValue = req.params.eyon;	
+																												return config.response(res , 200 , entryResult);		});
+	} ,
+
+	'eyonList' : (req , res) => {
+			
+			Eyon.find({})
+										.lean({})
+
+										.select('_id')
+
+										.hint({'_id' : 1})
+
+										.exec((err , entryResult) => {
+																				
+																					if (err) {
+																																							return config.errResponse(res , 400 , err);		}
+																					if (entryResult.length == 0) {
+																																							return config.response(res , 404 , {'message' : `Ethnic Group entries does not exists in the record or is not available.`});		}
+
+																																							return config.response(res , 200 , entryResult);				});
+	} ,
+
+	'eyonDetail' : (req , res) => {		eyon = req.params.eyon;	
 
 				if (req.params && req.params.eyon) {
 																			
-			async.waterfall([
-				
-				(callback) => {
-																Eyon.findOne({'eyon' : new RegExp(eValue, 'i')})
-																																									.exec((err , eyonResult) => {
-																																																									callback(null , eyonResult);	});
-																																																	}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																													return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Titles not available for this eyon'});
-																																																																					return;		}
-																												config.response(res , 200 , finalResult);																																														});
-																			} else {
-																									config.response(res , 404 , {'message' : 'No eyon id found'});		}
-	},
+				Eyon.findOne({'$text' : {'$search' : eyon }})
+																												.lean({})
 
-	'eyonAdd' : (req , res) => {		eValue = req.body , eyon = new Eyon(eValue);
+																												.exec((err , eyonResult) => {
+
+																																			if (err) {
+																																									config.errResponse(res , 400 , err);
+																																																													return false;	}
+																														if (!eyonResult) {
+																																									config.response(res , 404 , {'message' : 'Ethnic Group entry does not exists in this record or is not available.'});
+																																																																																																			return false;	}
+																																									config.response(res , 200 , eyonResult);		});
+								} else {
+														config.response(res , 404 , {'message' : 'No eyon id provided. Please provide a valid ethnic group id.'});		}
+	} ,
+
+	'eyonAdd' : (req , res) => {	eValue = req.body , eyon = new Eyon(eValue);
 			
-			eyon.save(function(err , eyonResult) {
-																								if (err) {
-																														config.response(res , 404 , err);
-																																															return;	}
-																														
-																														config.response(res , 200 , eyonResult);																																												});
+			eyon.save((err , eyonResult) => {
+																				if (err) {
+																										config.errResponse(res , 400 , err);
+																																															return false;	}
+																										config.response(res , 200 , eyonResult);									});
 	},
 
-	'eyonUpdate' : (req , res) => {	eValue = req.body.eyon , eParam = req.params.eyon;
-
-					if (req.params && req.params.eyon) {
-
-			Eyon.findOneAndUpdate({'eyon' : new RegExp(eParam, 'i')} , eValue , (err) => {
-																																												if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
-
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-													}
-														else {
-																			config.response(res , 404 , {'message' : 'No eyon id found'});		}
-	},
-
-	'eyonDelete' : (req , res) => {	eParam = req.params.eyon;
+	'eyonUpdate' : (req , res) => {	eValue = req.body.eyon , eyon = req.params.eyon;
 
 				if (req.params && req.params.eyon) {
 
-			Eyon.findOneAndRemove({'eyon' : new RegExp(eParam, 'i')} , function(err) {
-																																											if (err) {
-																																																	config.response(res , 404 , err);
-																																																																		return;	}
+				Eyon.findOne({'$text' : {'$search' : eyon }} , (err , eyon) => {		if (!eyon) {	return config.response(res , 404 , {'message' : 'Ethnic entry does not exists in the record or is not available.'});	}
+																	
+				Eyon.findOneAndUpdate({'$text' : {'$search' : eyon }} , 
 
-																																																	config.response(res , 204 , {'message' : 'Successful request.'});														});
-												} else {
-																	config.response(res , 404 , {'message' : 'No eyon id found'});		}
-	},
+									{'$set' : eValue} , {'new' : true , 'runValidators' : true} , (err , eyonResult) => {
+																																																				if (err) {																																													
+																																																										config.errResponse(res , 400 , err);
+																																																																															return false;	}
+																																																										config.response(res , 201 , eyonResult);										});		});
+			} else {
+								config.response(res , 404 , {'message' : 'No ethnic id provided. Please provide a valid ethnic id.'});		}
+	} ,
+
+	'eyonDelete' : (req , res) => {	eyon = req.params.eyon;
+
+		if (req.params.eyon) {
+				
+				Eyon.findOne({'$text' : {'$search' : eyon }} , (err , eyon) => {
+																																							if (!eyon) {
+																																														return config.response(res , 404 , {'message' : 'Ethnic entry does not exists in the record or is not available.'});	}
+																				eyon.remove((err , eyonResult) => {
+																																							if (err) {
+																																													config.errResponse(res , 400 , err);
+																																																																	return false;		}
+
+																																									return	config.response(res , 204 , {'message' : 'Entry successfully removed from the record.'});		})			});
+			} 	else {
+									config.response(res , 404 , {'message' : 'No ethnic id provided. Please provide a valid ethnic id.'});		}
+	} ,
 
 }

@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if books
+			for book in books
+				.list-posts-item
+					h2
+						a(href ='/book/' + book.url) #{book.title}
+					p Ethnic Group Name : #{book.ethnic_group.eyon}
+
+			else
+				p No Book resource available for this ethnic group.

@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if lifes
+			for life in lifes
+				.list-posts-item
+					h2
+						a(href ='/life/' + life.url) #{life.title}
+					p Ethnic Group Name : #{life.ethnic_group.eyon}
+
+			else
+				p No Life resource available for this ethnic group.

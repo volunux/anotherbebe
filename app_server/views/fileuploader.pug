@@ -1,0 +1,27 @@
+extends uploader
+
+block content
+	
+	.photo-add
+
+		form(method ='post' ,	action ='' enctype ='multipart/form-data' name ='aremiForm')
+			.form-group
+				label(for ='title') Title * :
+				input(type ='text' id ='title' name ='title' class ='form-control form-control-sm' placeholder ='Plato with Socrates' required ='true' value =(undefined === photo ? '' : photo.title))
+
+			.form-group.image
+				label(for ='photo') Image * :
+				input(type ='file' id ='photo' name ='photo' class ='form-control form-control-sm' accept ='image/*' required ='true')
+
+			.form-group(id ='object')
+				input(type ='hidden' id ='link' value ='image')
+
+			.form-group(id ='upload-group')
+				button(class ='btn btn-primary' id ='addUpload') Upload Image
+				button(class ='btn btn-danger' id ='delUpload') Delete Image
+				p(class ='' id ='upload-progress')
+				p(class ='' id ='uploadError') Upload Error
+				p(class ='' id ='uploadText') Upload Text
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4' id ='formSubmit') Submit

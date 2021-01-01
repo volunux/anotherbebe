@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if foods
+			for food in foods
+				.list-posts-item
+					h2
+						a(href ='/food/' + food.url) #{food.title}
+					p Ethnic Group Name : #{food.ethnic_group.eyon}
+
+			else
+				p No Food resource available for this ethnic group.

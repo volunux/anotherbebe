@@ -1,0 +1,30 @@
+include ../includes/page
+
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+
+		+headSection
+
+	body
+
+		.container
+
+
+			+header
+			
+			main(id ='main')
+
+				if messages.info
+					.message.info
+						span= messages.info
+
+				block content
+
+
+			+footer

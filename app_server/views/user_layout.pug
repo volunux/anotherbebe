@@ -1,0 +1,53 @@
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+
+		link(rel='stylesheet' , href='/stylesheets/add.css')
+		meta(name ='viewport' content ='width=device-width , initial-scale=1')
+	body
+		.container
+
+
+			.header
+
+				h1 #{title}
+
+				.nav
+					ul
+						li
+							a(href ='/') Home
+						li
+							a(href ='/country') Country
+						li
+							a(href ='/nation') People
+
+				.user-menu
+					ul
+						li
+							a(href ='/user/dashboard') Dashboard
+						li
+							a(href ='/user/profile') Profile
+						li
+							a(href ='/add') Add
+						li
+							a(href ='/update') Update
+						li
+							a(href ='/delete') Delete
+			
+			.main
+
+				if messages.info
+					.message.info
+						span= messages.info
+
+				block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise

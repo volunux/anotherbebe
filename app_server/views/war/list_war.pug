@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if wars
+			for war in wars
+				.list-posts-item
+					h2
+						a(href ='/war/' + war.url) #{war.title}
+					p Ethnic Group Name : #{war.ethnic_group.eyon}
+
+			else
+				p No Arts available for this ethnic group.

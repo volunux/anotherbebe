@@ -1,0 +1,16 @@
+db.continents.aggregate([ {'$match' : {} } , {'$out' : 'continent1'}]);
+
+db.continents.drop();
+
+var xxs = 0;
+
+db.continent1.find().toArray().forEach(function(country) {
+
+	xxs++;
+	
+	db.continent1.deleteOne({'_id' : country._id});
+
+	db.continents.insertOne({'_id' : country.name , 'name' : country.name , 'num' : xxs});
+
+});
+

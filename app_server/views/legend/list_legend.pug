@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if legends
+			for legend in legends
+				.list-posts-item
+					h2
+						a(href ='/legend/' + legend.url) #{legend.title}
+					p Ethnic Group Name : #{legend.ethnic_group.eyon}
+
+			else
+				p No Legend resource available for this ethnic group.

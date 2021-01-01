@@ -1,0 +1,15 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+	
+	.post-item
+
+		if food
+			| !{food.main_body}
+			
+			p
+				b Ethnic Group : 
+				| #{food.ethnic_group.eyon}
+

@@ -1,360 +1,925 @@
-var ethnic = '' , alpha = '' , async = require('async') , Eyon = require('../models/eyon') , Alphabet = require('../models/alphabet') , Name = require('../models/name') , Gender = require('../models/gender') ,
+var ethnic = '' , specie = '' , alpha = '' , name = '' , nValue = '' , fResult = {} , async = require('async') , config = require('../config/config');
 
-Baby = require('../models/baby') , Specie = require('../models/specie') , config = require('../config/config') , name = '' , nValue = '' , nParam = '';
+const Baby = require('../models/models').Baby;
+
+const Specie = require('../models/models').Specie;
+
+const Continent = require('../models/models').Continent;
+
+const Region = require('../models/models').Region;
+
+const Gender = require('../models/models').Gender;
+
+const Name = require('../models/name');
+
+const Alphabet = require('../models/models').Alphabet;
+
+const Eyon = require('../models/models').Eyon;
 
 module.exports = {
 
+	'namesAll' : (req , res , next) => {
 
-	'nameName' : (req , res) => {		name = req.params.name;
-	
-		Name.findOne({'name' : new RegExp(name, 'i')})
-																										.exec((err , nameResult) => {
-																																									if (err) {
-																																																			config.response(res , 404 , err);
-																																																																				return;	}
-																																									if (!nameResult) {
-																																																			config.response(res , 404 , {'message' : 'Name cannot be found'});
-																																																																																						return;	}
-																																																			config.response(res , 200 , nameResult);																					});
-	},
+					async.parallel({
+																'Specie' : (callback) => {
+																														Specie.findOne({'_id' : 'Human'})
+																																															.lean({})
+																																																				.select('_id')
+																																																												.exec(callback);		}
+			} , (err , result) => {	
+																				if (err) {
+																												return config.errResponse(res , 400 , err);	}
+																		if (!result) {
+																												return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+															if (!result.Specie) {
+																												return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																			if (result) {
+																												specie = result.Specie;
+
+					Name.find({'ethnic_group' : {'$exists' : true} , 'specie' : specie._id})		
+
+																								.lean({})
+
+																								.limit(20)
+
+																								.select('name ethnic_group gender -_id')
+
+																								.exec((err , entryResult) => {
+
+																									if (err) {
+																																									return config.errResponse(res , 400 , err);		}
+																								if (entryResult.length == 0) {
+																																									return config.response(res , 404 , {'message' : `Name entries does not exists in the record or is not available.`});	}
+																																									
+																																									return config.response(res , 200 , entryResult);		});		}
+
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});
+} , 
+
+	'nameSpecies' : (req , res , next) => { var species = req.params.specie; 
+
+					async.parallel({
+																'Specie' : (callback) => {
+																														Specie.findOne({'_id' : species})
+																																															.lean({})
+																																																				.select('_id')
+																																																												.exec(callback);		}
+			} , (err , result) => {	
+																				if (err) {
+																												return config.errResponse(res , 400 , err);	}
+																		if (!result) {
+																												return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+															if (!result.Specie) {
+																												return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																			if (result) {
+																												specie = result.Specie;
+
+					Name.find({'ethnic_group' : {'$exists' : true} , 'specie' : specie._id})
+
+																								.lean({})
+
+																								.limit(20)
+
+																								.select('name ethnic_group -_id')
+
+																								.exec((err , entryResult) => {
+
+																									if (err) {
+																																									return config.errResponse(res , 400 , err);		}
+																								if (entryResult.length == 0) {
+																																									return config.response(res , 404 , {'message' : `Name entries does not exists in the record or is not available.`});	}
+																																									
+																																									return config.response(res , 200 , entryResult);		});		}
+
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});
+} , 
+
+	'nameInfo' : (req , res) => {		name = req.params.name , ethnic = req.body.ethnic , specie = req.body.specie;
+
+		if (req.params && req.params.name) {
+
+					async.parallel({
+														'Eyon' : (callback) => {
+																													Eyon.findOne({'_id' : ethnic})
+																																													.lean({})
+																																																		.select('_id')
+																																																										.exec(callback);		} ,
+
+														'Specie' : (callback) => {
+																													Specie.findOne({'_id' : specie})
+																																														.lean({})
+																																																			.select('_id')
+																																																											.exec(callback);	}
+			} , (err , result) => {	
+																								if (err) {
+																															return config.errResponse(res , 400 , err);	}
+																						if (!result) {
+																															return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																				if (!result.Eyon) {
+																															return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																			if (!result.Specie) {
+																															return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																							if (result) {
+																															$eyon = result.Eyon , $specie = result.Specie;
+
+			Name.findOne({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id})
+																																													.lean({})
+
+																																													.select('name ethnic_group specie gender -_id')
+
+																																													.exec((err , entryResult) => {
+																													if (err) {
+																																							return config.errResponse(res , 400 , err);			}
+																													if (!entryResult) {
+																																							return config.response(res , 404 , {'message' : 'Name entry does not exists in the record or is not available.'});	}
+
+																																							return config.response(res , 200 , entryResult);		});					}
+
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});			}					});			}
+
+			else {	return config.response(res , 404 , {'message' : `No Name id provided. Please provide a valid Name id.`});		}
+	} ,
 
 	'names' : (req , res , next) => {
 
-								Name.find({})
-															.exec((err , nameResult) => {
+		Name.find({})
+									.exec((err , entryResult) => {
+
+																			if (err) {
+																																			return config.errResponse(res , 400 , err);		}
+																		if (entryResult.length == 0) {
+																																			return config.response(res , 404 , {'message' : 'Name entries does not exists in the record or is not available.'});		}
+
+																																			return config.response(res , 200 , entryResult);				});
+	} , 
+
+	'nameByGender' : (req , res , next) => {	ethnic = req.params.ethnic , gender = req.params.gender;
+
+		if (req.params && req.params.ethnic) {
+
+				async.parallel({
+													'Eyon' : (callback) => {
+																												Eyon.findOne({'_id' : ethnic})
+																																												.lean({})
+																																																	.select('_id')
+																																																									.exec(callback);		} ,
+													'Gender' : (callback) => {
+																												Gender.findOne({'_id' : gender})
+																																												.lean({})
+																																																	.select('_id')
+																																																									.exec(callback);		} ,
+													'Specie' : (callback) => {
+																												Specie.findOne({'_id' : 'Human'})
+																																													.lean({})
+																																																		.select('_id')
+																																																										.exec(callback);	}
+				} , (err , result) => {
+																								if (err) {
+																															return config.errResponse(res , 400 , err);	}
+																						if (!result) {
+																															return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																				if (!result.Eyon) {
+																															return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																			if (!result.Specie) {
+																															return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																			if (!result.Gender) {
+																															return config.response(res , 404 , {'message' : `Gender entry does not exists in the record or is not available.`});		}
+																							if (result) {
+																															$gender = result.Gender , $eyon = result.Eyon , $specie = result.Specie;
+
+							Name.find({'ethnic_group' : $eyon._id , 'specie' : $specie._id , 'gender' : $gender._id })
+																																																				.lean({})
+
+																																																				.exec((err , entryResult) => {
 																														if (err) {
-																																								config.response(res , 404 , err);
-																																																									return;	}
-																														if (!nameResult) {
-																																								config.response(res , 404 , {'message' : 'Name cannot be found'});
-																																																																											return;	}
-																																								config.response(res , 200 , nameResult);																					});
+																																					return config.errResponse(res , 400 , err);		}
+																					if (entryResult.length == 0) {
+																																					return config.response(res , 404 , {'message' : `Name entries not available for specified gender under this ethnic group.`});		}
+
+																																					return config.response(res , 200 , entryResult);			});		}
+	
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
+
+			else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+
 	} , 
 
-	'nameByHumanAll' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase();
+	'nameByHuman' : (req , res , next) => {		ethnic = req.params.ethnic , alphabet = req.params.alphabet;
 
-		async.waterfall([
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+
+																	'Alphabet' : (callback) => {
+																																Alphabet.findOne({'_id' : alphabet})
+																																																			.lean({})
+																																																								.select('_id')
+																																																																.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Human'})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																	if (!result.Alphabet) {
+																														return config.response(res , 404 , {'message' : `Alphabet entry does not exists in the record or is not available.`});		}
+																						if (result) {	
+																														$alphabet = result.Alphabet , $eyon = result.Eyon , $specie = result.Specie;
+
+						Name.find({'ethnic_group' : $eyon._id , 'specie' : $specie._id , 'alphabet' : $alphabet._id })
+																																																						.lean({})
+
+																																																						.select('name gender -_id')
+
+																																																						.exec((err , entryResult) => {
+														if (err) {
+																														return config.errResponse(res , 400 , err);		}
+														if (entryResult.length == 0) {
+																														return config.response(res , 404 , {'message' : `Name entries not available for this Ethnic Group for this alphabet.`});	}
+																														
+																														return config.response(res , 200 , entryResult);		});				}
+
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});			}
+
+			else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+} , 
+
+	'nameByAnimal' : (req , res , next) => {	ethnic = req.params.ethnic , alphabet = req.params.alphabet;
+
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+														'Eyon' : (callback) => {
+																													Eyon.findOne({'_id' : ethnic})
+																																													.lean({})
+																																																		.select('_id')
+																																																										.exec(callback);		} ,
+
+														'Alphabet' : (callback) => {
+																													Alphabet.findOne({'_id' : alphabet})
+																																															.lean({})
+																																																				.select('_id')
+																																																												.exec(callback);		} ,
+														'Specie' : (callback) => {
+																													Specie.findOne({'_id' : 'Animal'})
+																																															.lean({})
+																																																				.select('_id')
+																																																												.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																	if (!result.Alphabet) {
+																														return config.response(res , 404 , {'message' : `Alphabet entry does not exists in the record or is not available.`});		}
+																						if (result) {	
+																														$alphabet = result.Alphabet , $eyon = result.Eyon , $specie = result.Specie;
+
+						Name.find({'ethnic_group' : $eyon._id , 'specie' : $specie._id , 'alphabet' : $alphabet._id })
+																																																						.lean({})
+
+																																																						.select('name gender -_id')
+
+																																																						.exec((err , entryResult) => {
+														if (err) {
+																														return config.errResponse(res , 400 , err);		}
+														if (entryResult.length == 0) {
+																														return config.response(res , 404 , {'message' : `Animal Name entries not available for this Ethnic Group for this alphabet.`});	}
+																														
+																														return config.response(res , 200 , entryResult);		});				}
+			
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});			}
+			
+			else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+	} , 
+
+	'nameByPlant' : (req , res , next) => {		ethnic = req.params.ethnic , alphabet = req.params.alphabet;
+
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+														'Eyon' : (callback) => {
+																													Eyon.findOne({'_id' : ethnic})
+																																													.lean({})
+																																																		.select('_id')
+																																																										.exec(callback);		} ,
+
+														'Alphabet' : (callback) => {
+																													Alphabet.findOne({'_id' : alphabet})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+														'Specie' : (callback) => {
+																													Specie.findOne({'_id' : 'Plant'})
+																																														.lean({})
+																																																			.select('_id')
+																																																											.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																	if (!result.Alphabet) {
+																														return config.response(res , 404 , {'message' : `Alphabet entry does not exists in the record or is not available.`});		}
+																						if (result) {	
+																														$alphabet = result.Alphabet , $eyon = result.Eyon , $specie = result.Specie;
+
+						Name.find({'ethnic_group' : $eyon._id , 'specie' : $specie._id , 'alphabet' : $alphabet._id})
+																																																					.lean({})
+
+																																																					.select('name -_id')
+
+																																																					.exec((err , entryResult) => {
+														if (err) {
+																														return config.errResponse(res , 400 , err);		}
+														if (entryResult.length == 0) {
+																														return config.response(res , 404 , {'message' : `Plant Name entries not available for this Ethnic Group for this alphabet.`});	}
+																														
+																														return config.response(res , 200 , entryResult);		});				}
+			
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});			}
+			
+			else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+	} , 
+
+	'nameEthnicByHuman' : (req , res , next) => {		ethnic = req.params.ethnic;
+
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+														'Eyon' : (callback) => {
+																													Eyon.findOne({'_id' : ethnic})
+																																													.lean({})
+																																																		.select('_id')
+																																																										.exec(callback);		} ,
+														'Specie' : (callback) => {
+																													Specie.findOne({'_id' : 'Human'})
+																																														.lean({})
+																																																			.select('_id')
+																																																											.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {		
+																														eyon = result.Eyon , specie = result.Specie;
+
+				Name.find({'ethnic_group' : eyon._id , 'specie' : specie._id })
+																																				.lean({})
+
+																																				.exec((err , entryResult) => {
+																											if (err) {
+																																											return config.errResponse(res , 400 , err);		}
+																											if (entryResult.length == 0) {
+																																											return config.response(res , 404 , {'message' : `Name entries not available for this Ethnic Group.`});	}
+
+																																											return config.response(res , 200 , entryResult);			});			}
 				
-				(callback) => {
-																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Specie.findOne({'specie' : new RegExp('human' , 'i')})
-																																																		.exec((err , specieResult) => {
-																																																																						callback(null , specieResult , arg1);	});
-																																													},
+				else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
 
-				(arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , specie = arg2['_id'];
+				else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+} , 
 
-																				Name.find({'ethnic_group' : ethnic , 'specie' : specie})
+	'nameEthnicByAnimal' : (req , res , next) => {	ethnic = req.params.ethnic;
 
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);																																														});
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Animal'})
+																																																		.lean({})
+																																																							.select('_id')
+																																																															.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {		
+																														eyon = result.Eyon , specie = result.Specie;
+
+				Name.find({'ethnic_group' : eyon._id , 'specie' : specie._id})
+																																				.lean({})
+
+																																				.exec((err , entryResult) => {
+																											if (err) {
+																																											return config.errResponse(res , 400 , err);		}
+																											if (entryResult.length == 0) {
+																																											return config.response(res , 404 , {'message' : `Animal name entries not available for this Ethnic Group.`});	}
+
+																																											return config.response(res , 200 , entryResult);			});			}
+				
+				else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
+
+				else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
 	} , 
 
-	'nameEthnic' : (req , res , next) => {
-																										res.render('name/index' , {'title' : 'List of Ethnic Names ordered by Alphabet'})
-	} ,
+	'nameEthnicByPlant' : (req , res , next) => {		ethnic = req.params.ethnic;
 
-	'nameByAlphabet' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+		if (req.params && req.params.ethnic) {
+
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Plant'})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {		
+																														eyon = result.Eyon , specie = result.Specie;
+
+				Name.find({'ethnic_group' : eyon._id , 'specie' : specie._id })
+																																				.lean({})
+
+																																				.exec((err , entryResult) => {
+																											if (err) {
+																																											return config.errResponse(res , 400 , err);		}
+																											if (entryResult.length == 0) {
+																																											return config.response(res , 404 , {'message' : `Plant name entries not available for this Ethnic Group.`});	}
+
+																																											return config.response(res , 200 , entryResult);			});			}
+				
+				else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
+
+				else {	return config.response(res , 404 , {'message' : `No Ethnic Group id provided. Please provide a valid Ethnic Group id.`});		}
+	} , 
 		
-		async.waterfall([
-				
-				(callback) => {
-																				Eyon.find({'eyon' : new RegExp(ethnic, 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Alphabet.findOne({'alphabet' : new RegExp(alpha, 'i')})
-																																																		.exec((err , alphabetResult) => {
-																																																																						callback(null , alphabetResult , arg1);	});
-																																													},
-				(arg2 , arg1 , callback) => {		ethnic = arg1[0]['_id'] , alpha = arg2['_id'];
+	'nameDetail' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic;
 
-																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alpha})
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this alphabet.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);
-											});
+		if (req.params && req.params.name) {
+
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Human'})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);		}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {
+																														$eyon = result.Eyon , $specie = result.Specie;
+
+						Name.findOne({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id })
+																																																	.lean({})
+
+																																																	.exec((err , entryResult) => {
+																							if (err) {
+																															return config.errResponse(res , 400 , err);		}
+																			if (!entryResult) {
+																															return config.response(res , 404 , {'message' : `Name entry does not exists in the record or is not available for this Ethnic Group.`});	}
+
+																															return config.response(res , 200 , entryResult);		});		}
+			
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
+
+			else {	return config.response(res , 404 , {'message' : `No Name id provided. Please provide a valid Name id.`});		}
+
 	} , 
 
-	'nameByGender' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , gender = req.params.gender.toLowerCase();
+	'nameAnimalDetail' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic;
 
-		async.waterfall([
-				
-				(callback) => {
-																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Gender.findOne({'gender' : new RegExp(gender , 'i')})
-																																																		.exec((err , genderResult) => {
-																																																																						callback(null , genderResult , arg1);	});
-																																													},
-				(arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , gender = arg2['_id'];
+		if (req.params && req.params.name) {
 
-																				Name.find({'ethnic_group' : ethnic , 'gender' : gender})
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);																																														});
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Animal'})
+																																																		.lean({})
+																																																							.select('_id')
+																																																															.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {
+																														$eyon = result.Eyon , $specie = result.Specie;
+
+						Name.findOne({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id })
+																																																	.lean({})
+
+																																																	.select('-baby -_id')
+
+																																																	.exec((err , entryResult) => {
+																							if (err) {
+																															return config.errResponse(res , 400 , err);		}
+																			if (!entryResult) {
+																															return config.response(res , 404 , {'message' : `Animal Name entry does not exists in the record or is not available for this Ethnic Group.`});	}
+
+																															return config.response(res , 200 , entryResult);		});		}
+			
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
+
+			else {	return config.response(res , 404 , {'message' : `No Name id provided. Please provide a valid Name id.`});		}
 	} , 
 
-	'nameByHuman' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+	'namePlantDetail' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic;
 
-		async.waterfall([
-				
-				(callback) => {
-																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
-																																																		.exec((err , genderResult) => {
-																																																																						callback(null , genderResult , arg1);	});
-																																													},
-				(arg2 , arg1 , callback) => {
-																				Specie.findOne({'specie' : new RegExp('human' , 'i')})
-																																																		.exec((err , specieResult) => {
-																																																																						callback(null , specieResult , arg2 , arg1);	});
-																																													},
+		if (req.params && req.params.name) {
 
-				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : 'Plant'})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+			} , (err , result) => {
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {
+																														$eyon = result.Eyon , $specie = result.Specie;
 
-																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
+						Name.findOne({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id })
+																																																	.lean({})
 
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);																																														});
-	} , 
+																																																	.select('-baby -_id')
 
-	'nameByAnimal' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
+																																																	.exec((err , entryResult) => {
+																							if (err) {
+																															return config.errResponse(res , 400 , err);		}
+																			if (!entryResult) {
+																															return config.response(res , 404 , {'message' : `Plant Name entry does not exists in the record or is not available for this Ethnic Group.`});	}
 
-		async.waterfall([
-				
-				(callback) => {
-																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
-																																																		.exec((err , alphabetResult) => {
-																																																																						callback(null , alphabetResult , arg1);	});
-																																													},
-				(arg2 , arg1 , callback) => {
-																				Specie.findOne({'specie' : new RegExp('animal' , 'i')})
-																																																		.exec((err , specieResult) => {
-																																																																						callback(null , specieResult , arg2 , arg1);	});
-																																													},
+																															return config.response(res , 200 , entryResult);		});		}
+			
+			else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});		}
 
-				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
+			else {	return config.response(res , 404 , {'message' : `No Name id provided. Please provide a valid Name id.`});		}
 
-																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
-
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);																																														});
-	} , 
-
-	'nameByPlant' : (req , res , next) => {	ethnic = req.params.ethnic.toLowerCase() , alpha = req.params.alphabet.toLowerCase();
-
-		async.waterfall([
-				
-				(callback) => {
-																				Eyon.findOne({'eyon' : new RegExp(ethnic , 'i')})
-																																																		.exec((err , ethnicResult) => {
-																																																																						callback(null , ethnicResult);	});	
-																																													},
-				(arg1 , callback) => {
-																				Alphabet.findOne({'alphabet' : new RegExp(alpha , 'i')})
-																																																		.exec((err , alphabetResult) => {
-																																																																						callback(null , genderResult , arg1);	});
-																																													},
-				(arg2 , arg1 , callback) => {
-																				Specie.findOne({'specie' : new RegExp('plant' , 'i')})
-																																																		.exec((err , specieResult) => {
-																																																																						callback(null , specieResult , arg2 , arg1);	});
-																																													},
-
-				(arg3 , arg2 , arg1 , callback) => {		ethnic = arg1['_id'] , alphabet = arg2['_id'] , specie = arg3['_id'];
-
-																				Name.find({'ethnic_group' : ethnic , 'alphabet' : alphabet , 'specie' : specie})
-
-																																																		.exec((err , namesResult) => {
-																																																																						callback(null , namesResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																														return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Names not available under this gender.'});
-																																																																								return;		}
-																												config.response(res , 200 , finalResult);																																														});
-	} , 
-		
-	'nameDetail' : (req , res , next) => {	name = req.params.name;
-
-		Name.findOne({'name' : new RegExp(name, 'i')})
-																										.exec((err , nameResult) => {
-																																									if (err) {
-																																																				config.response(res , 404 , err);
-																																																																						return;	}
-																																									if (!nameResult) {
-																																																				config.response(res , 404 , {'message' : 'Names not available.'});
-																																																																																						return;		}
-																																																				config.response(res , 200 , nameResult);																							})
 	} , 
 
 	'nameAdd' : (req , res , next) => {
 		
 			async.parallel({
-																									'Eyon' : (callback) => {
-																																											Eyon.find({}).exec(callback);
-																									},
-
-																									'Alphabet' : (callback) => {
-																																											Alphabet.find({}).exec(callback);
-																									},
-
-																									'Gender' : (callback) => {
-																																											Gender.find({}).exec(callback);
-																									},
-
-																									'Specie' : (callback) => {
-																																											Specie.find({}).exec(callback);
-																									},
-
-																									'Baby' : (callback) => {
-																																											Baby.find({}).exec(callback);
-																									}
-			}, (err , result) => {	
-																		if (err) {
-																											config.response(res , 404 , err);
-																																												return;		}
+												'Eyon' : (callback) => {
+																										Eyon.find({})
+																																	.lean({})
+																																						.select('_id')
+																																														.hint({'_id' : 1 })
+																																																								.exec(callback);		} ,
+											'Region' : (callback) => {
+																										Region.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);	} ,
+											'Continent' : (callback) => {
+																										Continent.find({})
+																																				.lean({})
+																																									.select('_id')
+																																																	.hint({'_id' : 1 })
+																																																											.exec(callback);	} ,
+											'Alphabet' : (callback) => {
+																										Alphabet.find({})
+																																			.lean({})
+																																								.select('_id')
+																																																.hint({'_id' : 1 })
+																																																										.exec(callback);		} ,
+												'Gender' : (callback) => {
+																										Gender.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);		} ,
+												'Specie' : (callback) => {
+																										Specie.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);		} ,
+													'Baby' : (callback) => {
+																										Baby.find({})
+																																	.lean({})
+																																						.select('_id')
+																																														.hint({'_id' : 1 })
+																																																								.exec(callback);		}
+			} , (err , result) => {
+																				if (err) {
+																											return config.errResponse(res , 400 , err);		}
 																		if (!result) {
-																											config.response(res , 404 , {'message' : 'Data cannot be retrieved'});
-																																																															return;		}
-																											config.response(res , 200 , result);																																																					});
+																											return config.response(res , 404 , {'message' : 'Data cannot be retrieved.'});		}
+										if (result.Eyon.length == 0) {
+																											return config.response(res , 404 , {'message' : `Ethnic Group entries does not exists in the record or is not available.`});		}
+									if (result.Region.length == 0) {
+																											return config.response(res , 404 , {'message' : `Region entries does not exists in the record or is not available.`});					}
+								if (result.Continent.length == 0) {
+																											return config.response(res , 404 , {'message' : `Continent entries does not exists in the record or is not available.`});				}
+								if (result.Alphabet.length == 0) {
+																											return config.response(res , 404 , {'message' : `Alphabet entries does not exists in the record or is not available.`});				}
+									if (result.Gender.length == 0) {
+																											return config.response(res , 404 , {'message' : `Gender entries does not exists in the record or is not available.`});					}
+									if (result.Specie.length == 0) {
+																											return config.response(res , 404 , {'message' : `Specie entries does not exists in the record or is not available.`});					}
+										if (result.Baby.length == 0) {
+																											return config.response(res , 404 , {'message' : `Baby entries does not exists in the record or is not available.`});						}
+
+																											return config.response(res , 200 , result);			});
 	} , 
 
-	'nameAddSubmit' : (req , res , next) => {	var name = new Name(req.body);
+	'nameAddSubmit' : (req , res , next) => {	name = new Name(req.body);
 
-		name.save((err) => {
-																if (err) {
-																										config.response(res , 400 , err);
-																				}	else {
-																										config.response(res , 200 , {'message' : 'success'});
-																}																																						})
+			name.save((err , entryResult) => {
+																					if (err) {
+																											return config.errResponse(res , 400 , err);				 }
+
+																											return config.response(res , 200 , entryResult);		})
 	} , 
 
-	'nameUpdate' : (req , res , next) => {	name = req.params.name
+	'nameUpdate' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic , specie = req.body.specie;
 
 		async.parallel({
-																									'Eyon' : (callback) => {
-																																											Eyon.find({}).exec(callback);
-																									},
-
-																									'Alphabet' : (callback) => {
-																																											Alphabet.find({}).exec(callback);
-																									},
-
-																									'Gender' : (callback) => {
-																																											Gender.find({}).exec(callback);
-																									},
-
-																									'Baby' : (callback) => {
-																																											Baby.find({}).exec(callback);
-																									} ,
-
-																									'Name' : (callback) => {
-																																							Name.findOne({'name' : new RegExp(name, 'i')})
-																																																																.exec(callback) }	
-			}, (err , result) => {	
-																		if (err) {
-																											config.response(res , 404 , err);
-																																												return;		}
+												'Eyon' : (callback) => {
+																										Eyon.find({})
+																																	.lean({})
+																																						.select('_id')
+																																														.hint({'_id' : 1 })
+																																																								.exec(callback);		} ,
+												'Region' : (callback) => {
+																										Region.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);	} ,
+											'Continent' : (callback) => {
+																										Continent.find({})
+																																				.lean({})
+																																									.select('_id')
+																																																	.hint({'_id' : 1 })
+																																																											.exec(callback);	} ,
+											'Alphabet' : (callback) => {
+																										Alphabet.find({})
+																																			.lean({})
+																																								.select('_id')
+																																																.hint({'_id' : 1 })
+																																																										.exec(callback);		} ,
+												'Gender' : (callback) => {
+																										Gender.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);		} ,
+												'Specie' : (callback) => {
+																										Specie.find({})
+																																		.lean({})
+																																							.select('_id')
+																																															.hint({'_id' : 1 })
+																																																									.exec(callback);		} ,
+												'Baby' : (callback) => {
+																										Baby.find({})
+																																	.lean({})
+																																						.select('_id')
+																																														.hint({'_id' : 1 })
+																																																								.exec(callback);		} ,
+												'eEyon' : (callback) => {
+																										Eyon.findOne({'_id' : ethnic})
+																																										.lean({})
+																																															.select('_id')
+																																																							.hint({'_id' : 1 })
+																																																																	.exec(callback);	} ,
+											'eSpecie' : (callback) => {
+																										Specie.findOne({'_id' : specie})
+																																											.lean({})
+																																																.select('_id')
+																																																								.hint({'_id' : 1 })
+																																																																		.exec(callback);	} 
+			} , (err , result) => {
+																				if (err) {
+																											return config.errResponse(res , 400 , err);		}
 																		if (!result) {
-																											config.response(res , 404 , {'message' : 'Data cannot be retrieved'});
-																																																															return;		}
-																											config.response(res , 200 , result);																																																									})
+																											return config.response(res , 404 , {'message' : 'Data cannot be retrieved.'});		}
+										if (result.Eyon.length == 0) {
+																											return config.response(res , 404 , {'message' : `Ethnic Group entries does not exists in the record or is not available.`});		}
+									if (result.Region.length == 0) {
+																											return config.response(res , 404 , {'message' : `Region entries does not exists in the record or is not available.`});					}
+								if (result.Continent.length == 0) {
+																											return config.response(res , 404 , {'message' : `Continent entries does not exists in the record or is not available.`});				}
+								if (result.Alphabet.length == 0) {
+																											return config.response(res , 404 , {'message' : `Alphabet entries does not exists in the record or is not available.`});				}
+									if (result.Gender.length == 0) {
+																											return config.response(res , 404 , {'message' : `Gender entries does not exists in the record or is not available.`});					}
+									if (result.Specie.length == 0) {
+																											return config.response(res , 404 , {'message' : `Specie entries does not exists in the record or is not available.`});					}
+										if (result.Baby.length == 0) {
+																											return config.response(res , 404 , {'message' : `Baby entries does not exists in the record or is not available.`});						}			
+															if (!result.eEyon) {
+																											return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});			}
+														if (!result.eSpecie) {
+																											return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});						}
+																		if (result) {
+																										 eyon = result.eEyon , fResult = result , specie = result.eSpecie;
+
+						Name.findOne({'name' : name , 'ethnic_group' : eyon._id , 'specie' : specie._id})
+																																															.lean({})
+
+																																															.exec((err , entryResult) => {
+																					if (err) {
+																																	return config.errResponse(res , 400 , err);		}
+																					if (!entryResult) {
+																																	return config.response(res , 404 , {'message' : `Name entry does not exists in the record or is not available.`});	}
+																fResult.Name = entryResult;
+																																	return config.response(res , 200 , fResult);		});		}
+		else {
+						return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});
 	} , 
 
-	'nameUpdateSubmit' : (req , res , next) => {	nValue = req.body , nParam = req.params.name;
+	'nameUpdateSubmit' : (req , res , next) => {	nValue = req.body , name = req.params.name , ethnic = req.body.prevEthnic , specie = req.body.prevSpecie;
+							
+							async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : specie})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+									} , (err , result) => {	
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {
+																														$eyon = result.Eyon , $specie = result.Specie;
 
-				if (req.params && req.params.name) {
+					Name.findOneAndUpdate({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id } , {'$set' : nValue} , {'new' : true})
+																																																																							.lean({})
 
-		Name.findOneAndUpdate({'name' : new RegExp(nParam, 'i')} , nValue , (err) => {
-																																											if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
+																																																																							.exec((err , entryResult) => {
+																							if (err) {																
+																													return config.errResponse(res , 400 , err);		}
 
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-							} else {
-													config.response(res , 404 , {'message' : 'No Name id found'});		}
+																													return config.response(res , 201 , entryResult);		});		}
+
+					else {	return config.response(res , 404 , {'message' : `An error has occured. Please try again.`});		}		});
 	} , 
 
-	'nameDelete' : (req , res , next) => {	name = req.params.name;
-		
-		Name.findOneAndRemove({'name' : new RegExp(name , 'i')} , (err) => {
-																																					if (err) {
-																																											config.response(res , 404 , err);
-																																																												return;		}
+	'nameDelete' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic , specie = req.body.specie;
 
-																																											config.response(res , 204 , {'message' : 'success'});																																			});
-	} , 
+							async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : specie})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+									} , (err , result) => {	
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																						if (result) {
+																														$eyon = result.Eyon , $specie = result.Specie;
 
-	'nameDeleteSubmit' : (req , res , next) => {
-																									  res.render('name/index' , { 'title': 'Remove a Name' });
+				Name.findOne({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id })
+																																															.lean({})
+
+																																															.select('name ethnic_group specie -_id')
+																																															
+																																															.exec((err , entryResult) => {
+																					if (err) {
+																																	return config.errResponse(res , 400 , err);		}
+																					if (!entryResult) {
+																																	return config.response(res , 404 , {'message' : `Name entry does not exists in the record or is not available.`});	}
+
+																																	return config.response(res , 200 , entryResult);		});		}		});  
+		} , 
+
+	'nameDeleteSubmit' : (req , res , next) => {	name = req.params.name , ethnic = req.body.ethnic , specie = req.body.specie;
+
+					async.parallel({
+																	'Eyon' : (callback) => {
+																																Eyon.findOne({'_id' : ethnic})
+																																																.lean({})
+																																																					.select('_id')
+																																																													.exec(callback);		} ,
+																	'Specie' : (callback) => {
+																																Specie.findOne({'_id' : specie})
+																																																	.lean({})
+																																																						.select('_id')
+																																																														.exec(callback);	}
+									} , (err , result) => {	
+																							if (err) {
+																														return config.errResponse(res , 400 , err);	}
+																					if (!result) {
+																														return config.response(res , 404 , {'message' : `Data cannot be retrieved.`});		}
+																			if (!result.Eyon) {
+																														return config.response(res , 404 , {'message' : `Ethnic Group entry does not exists in the record or is not available.`});		}
+																		if (!result.Specie) {
+																														return config.response(res , 404 , {'message' : `Specie entry does not exists in the record or is not available.`});		}
+																					if (result) {
+																													$eyon = result.Eyon , $specie = result.Specie;
+
+				Name.findOneAndDelete({'name' : name , 'ethnic_group' : $eyon._id , 'specie' : $specie._id })
+																																																			.lean({})
+
+																																																			.select('name -_id')
+																																																			
+																																																			.exec((err , entryResult) => {
+																									if (err) {
+																																return config.errResponse(res , 400 , err);		}
+																					if (!entryResult) {
+																																return config.response(res , 404 , {'message' : `Name entry does not exists in the record or is not available.`});	}
+
+																																return config.response(res , 204 , {'message' : `Entry successfully removed from the record.`});		});	}
+				else {
+								config.response(res , 404 , {'message' : `An error has occured. Please try again.`});			}		});
 	} , 
 
 	'nameVote' : (req , res , next) => {
 																									  res.render('name/index' , { 'title': 'Vote a Name' });
-	} , 
-}				
+	} 
+
+}	

@@ -1,0 +1,17 @@
+if breadcrumb
+
+	nav(aria-label='breadcrumb' class ='breadcrumb')
+
+		ol(id ='breadcrumb')
+
+			each crumb , index in breadcrumb
+
+				if index == breadcrumb.length - 1
+
+					a(class='breadcrumb-item active' aria-current='page') #{crumb.label}
+
+				else
+
+					a(href=crumb.url) #{crumb.label} 
+
+						span -> 

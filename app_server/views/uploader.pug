@@ -1,0 +1,29 @@
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		link(rel='stylesheet' , href='/stylesheets/add.css', )
+		link(rel='stylesheet' , href='/stylesheets/form.css')
+
+
+		meta(name ='viewport' content ='width=device-width , initial-scale=1')
+	
+	body
+	
+		.container.py-4
+
+			h1 #{title}
+			
+			block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise
+
+	script(src ='/js/jquery.js')
+	script(src ='/js/forms/uploader.js')

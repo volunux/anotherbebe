@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if individuals
+			for individual in individuals
+				.list-posts-item
+					h2
+						a(href ='/individual/' + individual.url) #{individual.title}
+					p Ethnic Group Name : #{individual.ethnic_group.eyon}
+
+			else
+				p No Individual resource available for this ethnic group.

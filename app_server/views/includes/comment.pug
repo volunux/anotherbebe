@@ -1,0 +1,15 @@
+include ./format_date
+
+if photo.comments
+	.comments
+		h2(rel ='nofollow') Comments
+		each comment in photo.comments
+			.comment
+				p(rel ='nofollow' class ='author') #{comment.author.full_name}
+					small.timestamp 
+						+dateFormatted(comment.createdAt)
+				p(class ='text' rel ='nofollow') !{(comment.text).replace(/\n/g, '<br/>')}
+					if uIdentity
+						small(rel ='nofollow')
+							a(rel ='nofollow' id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/update` : '#' ) Edit
+							a(rel ='nofollow' id =(comment._id) href =(uIdentity == comment.author._id) ? `/photo/${photo}/comment/${comment._id}/delete` : '#' ) Delete

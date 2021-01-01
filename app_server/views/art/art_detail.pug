@@ -1,0 +1,28 @@
+extends ../layout
+
+include ../includes/find_user
+
+block content
+	
+	.post-item
+
+		if art
+			if art.main_body
+				| !{art.main_body}
+			
+			if art.ethnic_group
+
+				p
+					b Ethnic Group : 
+					| #{art.ethnic_group}
+
+			if art.author
+				p 
+					b Published by 
+					| : !{art.author.full_name}
+
+			if art.votes
+				p(class ='vote') 
+					b Votes		 
+					| : !{art.votes.votes}
+

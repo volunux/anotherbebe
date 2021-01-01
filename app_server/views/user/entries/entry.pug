@@ -1,0 +1,256 @@
+extends ../../user_layout
+
+block content
+
+	.entries
+
+		if arts
+			if arts
+				ul
+					for art in arts
+						li(class ='u-entry')
+							a(href ='/art/' + art.url) #{art.title}
+							p
+								a(class ='' href ='/update/art/' + art.url) Update
+								a(class ='' href ='/delete/art/' + art.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if books
+			if books
+				ul
+					for book in books
+						li(class ='u-entry')
+							a(href ='/book/' + book.url) #{book.title}
+							p
+								a(href ='/update/book/' + book.url) Update
+								a(href ='/delete/book/' + book.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if dresses
+			if dresses
+				ul
+					for dress in dresses
+						li(class ='u-entry')
+							a(href ='/dress/' + dress.url) #{dress.title}
+							p
+								a(href ='/update/dress/' + dress.url) Update
+								a(href ='/update/dress/' + dress.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if festivals
+			if festivals
+				ul
+					for festival in festivals
+						li(class ='u-entry')
+							a(href ='/festival/' + festival.url) #{festival.title}
+							p
+								a(href ='/update/festival/' + festival.url) Update
+								a(href ='/delete/festival/' + festival.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if folktales
+			if folktales
+				ul
+					for folktale in folktales
+						li(class ='u-entry')
+							a(href ='/folktale/' + folktale.url) #{folktale.title}
+							p
+								a(href ='/update/folktale/' + folktale.url) Update
+								a(href ='/delete/folktale/' + folktale.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if foods
+			if foods
+				ul
+					for food in foods
+						li(class ='u-entry')
+							a(href ='/food/' + food.url) #{food.title}
+							p
+								a(href ='/update/food/' + food.url) Update
+								a(href ='/delete/food/' + food.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if histories
+			if histories
+				ul
+					for history in histories
+						li(class ='u-entry')
+							a(href ='/history/' + history.url) #{history.title}
+							p
+								a(href ='/update/history/' + history.url) Update
+								a(href ='/delete/history/' + history.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if individuals
+			if individuals
+				ul
+					for individual in individuals
+						li(class ='u-entry')
+							a(href ='/individual/' + individual.url) #{individual.title}
+							p
+								a(href ='/update/individual/' + individual.url) Update
+								a(href ='/delete/individual/' + individual.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if laws
+			if laws
+				ul
+					for law in laws
+						li(class ='u-entry')
+							a(href ='/law/' + law.url) #{law.title}
+							p
+								a(href ='/update/law/' + law.url) Update
+								a(href ='/delete/law/' + law.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if legends
+			if legends
+				ul
+					for legend in legends
+						li(class ='u-entry')
+							a(href ='/legend/' + legend.url) #{legend.title}
+							p
+								a(href ='/update/dress/' + legend.url) Update
+								a(href ='/delete/dress/' + legend.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if lifes
+			if lifes
+				ul
+					for life in lifes
+						li(class ='u-entry')
+							a(href ='/life/' + life.url) #{life.title}
+							p
+								a(href ='/update/life/' + life.url) Update
+								a(href ='/delete/life/' + life.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if mythologies
+			if mythologies
+				ul
+					for mythology in mythologies
+						li(class ='u-entry')
+							a(href ='/mythology/' + mythology.url) #{mythology.title}
+							p
+								a(href ='/update/mythology/' + mythology.url) Update
+								a(href ='/delete/mythology/' + mythology.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if names
+			if names
+				ul
+					for name in names
+						- var nameSpecie = name.specie.specie.toLowerCase()
+							if (nameSpecie == 'human')
+								li(class ='u-entry')
+									a(href ='/name/nation/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+									p
+										a(href ='/update/name/nation/' + name.ethnic_group.eyon + '/' + name.url) Update
+										a(href ='/delete/name/nation/' + name.ethnic_group.eyon + '/' + name.url) Delete
+
+							if (nameSpecie == 'animal')
+									li(class ='u-entry')
+										a(href ='/name/animal/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+										p
+											a(href ='/update/name/animal/' + name.ethnic_group.eyon + '/' + name.url) Update
+											a(href ='/delete/name/animal/' + name.ethnic_group.eyon + '/' + name.url) Delete
+
+							if (nameSpecie == 'plant')
+								li(class ='u-entry')
+									a(href ='/name/plant/' + name.ethnic_group.eyon + '/' + name.url) #{name.name}
+									p
+										a(href ='/update/name/plant/' + name.ethnic_group.eyon + '/' + name.url) Update
+										a(href ='/delete/name/plant/' + name.ethnic_group.eyon + '/' + name.url) Delete
+
+			else
+				p You have no entries in this category.
+
+
+		if photos
+			if photos
+				ul
+					for photo in photos
+						li(class ='u-entry')
+							a(href ='/photo/' + photo.url) #{photo.title}
+							p
+								a(href ='/update/photo/' + photo.url) Update
+								a(href ='/delete/photo/' + photo.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if religions
+			if religions
+				ul
+					for religion in religions
+						li(class ='u-entry')
+							a(href ='/religion/' + religion.url) #{religion.title}
+							p
+								a(href ='/update/religion/' + religion.url) Update
+								a(href ='/delete/religion/' + religion.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if sounds
+			if sounds
+				ul
+					for sound in sounds
+						li(class ='u-entry')
+							a(href ='/sound/' + sound.url) #{sound.title}
+							p
+								a(href ='/update/sound/' + sound.url) Update
+								a(href ='/delete/sound/' + soud.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if videos
+			if videos
+				ul
+					for video in videos
+						li(class ='u-entry')
+							a(href ='/video/' + video.url) #{video.title}
+							p
+								a(href ='/update/video/' + video.url) Update
+								a(href ='/delete/video/' + video.url) Delete
+			else
+				p You have no entries in this category.
+
+
+		if proverbs
+			if proverbs
+				ul
+					for proverb in proverbs
+						li(class ='u-entry')
+							a(href ='/proverb/' + proverb.url) #{proverb.title}
+							p
+								a(href ='/update/proverb/' + proverb.url) Update
+								a(href ='/delete/proverb/' + proverb.url) Delete
+			else
+				p You have no entries in this category.
+

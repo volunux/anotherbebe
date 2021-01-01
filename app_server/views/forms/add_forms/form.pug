@@ -1,0 +1,17 @@
+extends ../../name_layout
+
+block content
+	
+	.proverb-add
+	  
+		h1= title	
+
+		form(method ='post' ,	action ='' enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='proverb') Proverb * :
+				textarea(id ='proverb' proverb ='proverb' required ='true' class ='form-control form-control-sm' ) #{(undefined ===  ? '' : proverb.proverb)}
+
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit

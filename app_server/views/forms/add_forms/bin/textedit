@@ -1,0 +1,62 @@
+extends ../../form_add
+
+block content
+	
+	.folktale-add
+	  
+		form(name = 'boboForm' , method ='post' ,	action ='' , enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='title') Title * : 
+				input(type ='text' id ='title' name ='title' class ='form-control form-control-sm' required ='true' value =(undefined === folktale ? '' : folktale.title))
+
+			.form-group
+				label(for ='folktale') Folktale * : 
+				textarea(id ='folktale' name ='folktale' required ='true' class ='form-control form-control-sm' ) #{(undefined === folktale ? '' : folktale.folktale)}
+
+			.form-group
+				label(for ='ethnic_group') Ethnic Group * : 
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' required ='true')
+					option(value ='') 
+    	
+			#textEditor
+				.form-group
+					select#format.form-control.form-control-sm.mr-3
+						option(selected='') - formatting -
+						option(value='h1') Title 1 <h1>
+						option(value='h2') Title 2 <h2>
+						option(value='h3') Title 3 <h3>
+						option(value='h4') Title 4 <h4>
+						option(value='h5') Title 5 <h5>
+						option(value='h6') Subtitle <h6>
+						option(value='p') Paragraph <p>
+						option(value='pre') Preformatted <pre>
+
+			
+					button#clean.fas.fa-eraser.fa-xs.mr-2(title='Clean')
+					button#undo.fas.fa-undo.fa-xs.mr-2(title='Undo')
+					button#redo.fas.fa-redo.fa-xs.mr-2(title='Redo')
+					button#copy.fas.fa-copy.fa-xs.mr-2(title='Copy')
+					button#cut.fas.fa-cut.fa-xs.mr-2(title='Cut')
+					button#underline.fas.fa-underline.fa-xs.mr-2(title='Underline')
+					button#bold.fas.fa-bold.fa-xs.mr-2(title='Bold')
+					button#italic.fas.fa-italic.fa-xs.mr-2(title='Italics')
+					button#align-left.fas.fa-align-left.fa-xs.mr-2(title='Align Left')
+					button#align-center.fas.fa-align-center.fa-xs.mr-2(title='Align Center')
+					button#align-right.fas.fa-align-right.fa-xs.mr-2(title='Align Right')
+					button#list-ol.fas.fa-list-ol.fa-xs.mr-2(title='Ordered List')
+					button#list-ul.fas.fa-list-ul.fa-xs.mr-2(title='Unordered List')
+					button#quote.fas.fa-quote-left.fa-xs.mr-2(title='Quote')
+					button#link.fas.fa-link.fa-xs.mr-2(title='Link')
+    	
+			#textBox.form-control.form-control-sm(contenteditable='true')
+				p Lorem ipsum
+			<p id='editMode' class ='editMode'><input type='checkbox' name='switchMode' id='switchBox' onchange='setDocMode(this.checked);' /> <label for='switchBox'>Show HTML</label></p>
+	
+				p
+					button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit
+
+				p
+					input#pvalue(type='hidden')
+					input#plvalue(type='hidden')
+

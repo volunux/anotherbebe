@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if mythologys
+			for mythology in mythologys
+				.list-posts-item
+					h2
+						a(href ='/mythology/' + mythology.url) #{mythology.title}
+					p Ethnic Group Name : #{mythology.ethnic_group.eyon}
+
+			else
+				p No Mythology resource available for this ethnic group.

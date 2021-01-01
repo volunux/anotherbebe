@@ -1,0 +1,4 @@
+mixin findUser(voters)
+	- var voter = voters ? findUser(voters) : undefined;
+	if (voter == undefined || voter == 0 || voter == null)
+		a(class ='vote' href=`/photo/${photo.slug}/vote`) Vote for this Image

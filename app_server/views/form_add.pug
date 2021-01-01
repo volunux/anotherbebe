@@ -1,0 +1,31 @@
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		link(rel='stylesheet' , href='/stylesheets/boot.css', )
+		link(rel='stylesheet' , href='/stylesheets/style-s.css')
+		link(rel='stylesheet' , href='/stylesheets/texteditor.css')
+
+		link(rel='stylesheet' , href='https://use.fontawesome.com/releases/v5.7.2/css/solid.css' , integrity='sha384-r/k8YTFqmlOaqRkZuSiE9trsrDXkh07mRaoGBMoDcmA58OHILZPsk29i2BsFng1B', crossorigin='anonymous')
+		link(rel='stylesheet' , href='https://use.fontawesome.com/releases/v5.7.2/css/fontawesome.css' , integrity='sha384-4aon80D8rXCGx9ayDt85LbyUHeMWd3UiBaWliBlJ53yzm9hqN21A+o1pqoyK04h+', crossorigin='anonymous')
+
+		meta(name ='viewport' content ='width=device-width , initial-sclae=1')
+	
+	body(onload='initDoc();')
+	
+		.container.py-4
+
+			h1 #{title}
+			
+			block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise
+
+	script(src ='/js/texteditor.js')

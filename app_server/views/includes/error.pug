@@ -1,0 +1,21 @@
+mixin ajax
+
+		ul.ajax.errors
+
+		if errors
+
+			.form-errors
+
+				p Errors found after trying to process form. These include : -
+			
+				ul.errors
+			
+					for error in errors
+			
+						if error.msg
+			
+							li!= error.msg
+			
+						else
+			
+							li!= error.message

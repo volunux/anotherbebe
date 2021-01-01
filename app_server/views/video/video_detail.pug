@@ -1,0 +1,65 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+
+	.video-detail
+		if video
+			.video-video-detail
+				video(controls src =video.video_detail.location)
+			
+			if video.title
+				p 
+					b Title 
+					| : #{video.title}
+			if video.date
+				p 
+					b Date 
+					| : #{video.date}
+			if video.century
+				p 
+					b Period
+					| : #{video.century.century} Century
+			if video.genre
+				p 
+					b Category
+					| : #{video.genre.genre}
+			if video.country
+				p
+					b Country 
+					| : #{video.country.name}
+			if video.continent
+				p 
+					b Continent 
+					| : #{video.continent.name}
+			if video.region
+				p 
+					b Region 
+					| : #{video.region.name}
+			if video.ethnic_group
+				p
+					b Ethnic Group 
+					| : #{video.ethnic_group.eyon}
+			if video.artist
+				p 
+					b Artist 
+					| : #{video.artist}
+
+			if video.credit
+				p 
+					b Credit 
+					| : #{video.credit}
+			if video.dimension
+				p 
+					b Dimension 
+					| : #{video.dimension}
+			if video.about
+				p 
+					b About 
+					| : #{video.about}
+			if video.vote !== 0
+				p Likes : video.vote
+
+
+			button(class ='like') Vote for this Image

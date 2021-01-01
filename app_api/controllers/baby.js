@@ -1,95 +1,99 @@
-var Baby = require('../models/baby') , config = require('../config/db') , async = require('async') , bValue = '' , baby = '' , bParam = '';
+ Baby = require('../models/baby') , config = require('../config/config') , async = require('async') , bValue = '' , baby = '' , bParam = '';
 
 module.exports = {
 
-	'babyName' : (req , res) => {	bValue = req.params.baby;
+	'babyName' : (req , res) => {	baby = req.params.baby;
 			
-			Baby.findOne({'baby' : new RegExp(bValue, 'i')})
-																													.exec((err , babyName) => {
-																																												if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																												if (!babyName) {
+			Baby.findOne({'baby' : new RegExp(baby , 'i')})
+																												.exec((err , babyResult) => {
 
-																																																						config.response(res , 404 , {'message' : '404'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , babyName);
-																																		});
-	},
+																												if (err) {
+																																						config.compiledError(res , 400 , err);
+																																																										return false;	}
+																												if (!babyResult) {
+																																						config.response(res , 404 , {'message' : 'Baby entry does not exists in the record or is not available.'});
+																																																																																											return false;		}
+																																						config.response(res , 200 , babyResult);		});
+	} ,
 
 	'babyList' : (req , res) => {	
-																	Baby.find({})
-																									.exec(function(err , babyResult) {
-																																											if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																											if (!babyResult) {
-																																																						config.response(res , 404 , {'message' : 'babys cannot be found'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , babyResult);
-																						});
-	},
 
-	'babyDetail' : (req , res) => {		bValue = req.params.baby;	
+			Baby.find({})
+										.lean({})
 
-				if (req.params && req.params.baby) {
-																			
-			async.waterfall([
-				
-				(callback) => {
-																Baby.findOne({'baby' : new RegExp(bValue, 'i')})
-																																									.exec((err , babyResult) => {
-																																																									callback(null , babyResult);	});
-																																																	}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																													return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Titles not available for this baby'});
-																																																																					return;		}
-																												config.response(res , 200 , finalResult);																																														});
-																			} else {
-																									config.response(res , 404 , {'message' : 'No baby id found'});		}
-	},
+										.select('_id')
 
-	'babyAdd' : (req , res) => {		bValue = req.body , baby = new Baby(bValue);
+										.hint({'_id' : 1})
+
+										.exec((err , entryResult) => {
+																					
+																						if (err) {
+																																								return config.errResponse(res , 400 , err);		}
+																						if (entryResult.length == 0) {
+																																								return config.response(res , 404 , {'message' : 'Baby entries does not exists in the record or is not available.'});		}
+
+																																								return config.response(res , 200 , entryResult);				});
+	} ,
+
+	'babyDetail' : (req , res) => {		baby = req.params.baby;	
+
+		if (req.params && req.params.baby) {
 			
-			baby.save(function(err , babyResult) {
-																								if (err) {
-																														config.response(res , 404 , err);
-																																															return;	}
-																														
-																														config.response(res , 200 , babyResult);																																												});
-	},
+			Baby.findOne({'baby' : new RegExp(baby , 'i')})
+																											.exec((err , babyResult) => {
 
-	'babyUpdate' : (req , res) => {	bValue = req.body.baby , bParam = req.params.baby;
+																																	if (err) {
+																																											config.compiledError(res , 400 , err);
+																																																															return false;	}
+																																	if (!babyResult) {
+																																											config.response(res , 404 , {'message' : 'Baby entry does not exists in the record or is not available.'});
+																																																																																																return false;	}
+																																											config.response(res , 200 , babyResult);
+																																																																return false;		})		
+				}		else {
+										config.response(res , 404 , {'message' : 'No baby id provided. Please provide a valid baby id.'});		}
+	} ,
 
-					if (req.params && req.params.baby) {
+	'babyAdd' : (req , res) => {	baby = new Baby(req.body);
+			
+			baby.save((err , babyResult) => {
+																				if (err) {
+																										config.compiledError(res , 400 , err);
+																																															return false;	}
+																										config.response(res , 200 , babyResult);										});
+	} ,
 
-			Baby.findOneAndUpdate({'baby' : new RegExp(bParam, 'i')} , bValue , (err) => {
-																																												if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
-
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-													}
-														else {
-																			config.response(res , 404 , {'message' : 'No baby id found'});		}
-	},
-
-	'babyDelete' : (req , res) => {	bParam = req.params.baby;
+	'babyUpdate' : (req , res) => {	bValue = req.body.baby , baby = req.params.baby;
 
 				if (req.params && req.params.baby) {
 
-			Baby.findOneAndRemove({'baby' : new RegExp(bParam, 'i')} , function(err) {
-																																											if (err) {
-																																																	config.response(res , 404 , err);
-																																																																		return;	}
+				Baby.findOne({'baby' : new RegExp(baby , 'i')} , (err , baby) => {	if (!baby) {	return config.response(res , 404 , {'message' : 'Baby entry does not exists in the record or is not available.'});	}
 
-																																																	config.response(res , 204 , {'message' : 'Successful request.'});														});
-												} else {
-																	config.response(res , 404 , {'message' : 'No baby id found'});		}
-	},
+				Baby.findOneAndUpdate({'baby' : new RegExp(baby , 'i')} ,
+
+								{'$set' : bValue} , {'new' : true , 'runValidators' : true} , (err , babyResult) => {
+																																																				if (err) {																																													
+																																																										config.compiledError(res , 400 , err);
+																																																																															return false;	}
+																																																										config.response(res , 201 , babyResult);										});		});
+			} else {
+								config.response(res , 404 , {'message' : 'No baby id provided. Please provide a valid baby id.'});		}
+	} ,
+
+	'babyDelete' : (req , res) => {	baby = req.params.baby;
+
+		if (req.params.baby) {
+				
+				Baby.findOne({'baby' : new RegExp(baby , 'i')} , (err , baby) => {	if (!baby) {	return config.response(res , 404 , {'message' : 'Baby entry does not exists in the record or is not available.'});	}
+																	
+																		baby.remove((err , babyResult) => {
+																																				if (err) {
+																																										config.compiledError(res , 400 , err);
+																																																														return false;		}
+
+																																						return	config.response(res , 204 , {'message' : 'Entry successfully removed from the record.'});		})			});
+			} 	else {
+									config.response(res , 404 , {'message' : 'No baby id provided. Please provide a valid baby id.'});		}
+		} ,
 
 }

@@ -1,0 +1,96 @@
+extends ../layouts/photo_layout
+
+include ../includes/find_user
+
+block content
+
+	.photo-detail
+	
+		if photo
+			.photo-photo-detail
+				img(src =photo.photo_detail.location alt =photo.title title =photo.title)
+			
+			if photo.title
+				p 
+					b Title 
+					| : !{photo.title}
+			
+			if photo.date
+				p 
+					b Date 
+					| : !{photo.date}
+			
+			if photo.century
+				p 
+					b Period
+					| : !{photo.century}
+			
+			if photo.genre
+				p 
+					b Category
+					| : !{photo.genre}
+			
+			if photo.country
+				p
+					b Country 
+					| : !{photo.country}
+			
+			if photo.continent
+				p 
+					b Continent 
+					| : !{photo.continent}
+			
+			if photo.region
+				p 
+					b Region 
+					| : !{photo.region}
+			
+			if photo.ethnic_group
+				p
+					b Ethnic Group 
+					| : !{photo.ethnic_group}
+			
+			if photo.artist
+				p 
+					b Artist 
+					| : !{photo.artist}
+			
+			if photo.findspot
+				p 
+					b Findspot 
+					| : !{photo.findspot}
+			
+			if photo.medium
+				p 
+					b Medium 
+					| : !{photo.medium}
+			
+			if photo.credit
+				p 
+					b Credit 
+					| : !{photo.credit}
+			
+			if photo.dimension
+				p 
+					b Dimension 
+					| : !{photo.dimension}
+
+			if photo.about
+				p 
+					b About 
+					| : !{photo.about}
+
+			if photo.author
+				p 
+					b Published by 
+					| : !{photo.author.full_name}
+				
+			if photo.votes
+				p 
+					b Votes		 
+					| : !{photo.votes.votes}
+
+			if isLoggedIn && photo
+				+findUser(photo.votes ? photo.votes.voters : undefined)
+
+			include ../includes/comment

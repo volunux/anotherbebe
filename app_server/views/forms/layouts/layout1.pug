@@ -1,0 +1,26 @@
+include ../includes/head
+
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		+headSection
+	
+	body(onload='initDoc();')
+	
+		.container.py-4
+
+			h1 #{title}
+			
+			block content
+
+
+			.footer
+				p Copyright &copy; 2019 All Right Reserved.
+				p Published by V Enterprise
+
+	script(src ='/js/texteditor.js')

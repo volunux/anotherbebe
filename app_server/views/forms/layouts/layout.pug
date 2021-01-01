@@ -1,0 +1,27 @@
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+
+		link(rel='stylesheet' , href='/stylesheets/add.css')
+		link(rel='stylesheet' , href='/stylesheets/frola-pk.css')
+		link(rel='stylesheet' , href='/stylesheets/frola-style.css')
+
+		meta(name ='viewport' content ='width=device-width , initial-scale=1')
+
+	body
+
+
+		.container
+
+			h1 #{title}
+
+			block content
+	script(src ='/js/froala_editor.min.js')
+	script(src ='/js/frola.js')
+	script(src ='/js/jquery.js' type ='text/javascript')
+	script(src ='/js/frola-script.js' type ='text/javascript')

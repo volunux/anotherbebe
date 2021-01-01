@@ -1,0 +1,19 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+
+		if arts
+
+			for art in arts
+
+				.list-posts-item
+
+					h2
+						a(href ='/art/' + art.slug) #{art.title}
+
+					p Ethnic Group Name : #{art.ethnic_group}
+
+			else
+				p No Arts available.

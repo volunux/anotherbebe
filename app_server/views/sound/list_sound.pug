@@ -1,0 +1,18 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+
+	.list-sound
+		for sound in sounds
+			.list-sound-item
+				.list-sound-item-sound
+					a(href = '/sound/' + sound['url'])
+						+fixDir(sound.sound_detail.path)
+				p 
+					b Title : 
+					a(href='/sound/' + sound['url']) #{sound.title}
+				p Period : #{sound.genre.genre}
+				p Continent : #{sound.continent.name}
+				p Country : #{sound.country.name}

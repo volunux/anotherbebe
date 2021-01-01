@@ -1,0 +1,112 @@
+extends ../layouts/post
+
+include ../../includes/error
+
+block content
+	
+	.post-add
+
+		button(id ='showFormGuide' class ='showFormGuide btn btn-primary px-4') Show form filling guideline: 
+
+		ul.guidelines
+			p Click on the above button button to hide the form filling guideline.
+			p All fields mark with the asterick symbol (*) should have a valid value.
+			li Title cannot be less than 0 character or be greater than 150 characters in length.
+			li Century should be provided and cannot be empty.
+			li Ethnic Group should be provided and cannot be empty.
+			li Country should be provided and cannot be empty.
+			li Continent should be provided and cannot be empty.
+			li Region should be provided and cannot be empty.
+			li Main body cannot be less than 0 character or be greater than 6000 characters in length.
+
+		+ajax
+
+		form(method ='post'	action ='' enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='title') Title * : 
+				input(type ='text' id ='title' name ='title' class ='form-control form-control-sm' value =(undefined == art ? '' : art.title) )
+
+			.form-group
+				label(for ='century') Century * :
+				select(id ='century' name ='century' class ='form-control form-control-sm'  )
+					option(value ='')
+					for century in centuries
+						if art
+							if art.century
+								option(value =century._id class ='form-control' selected =(century._id.toString() == art.century._id || century._id.toString() == art.century) ? 'selected' : false) #{century._id}
+							else
+								option(value=century._id) #{century._id}
+						else
+							option(value=century._id) #{century._id}
+
+			.form-group
+				label(for ='ethnic_group') Ethnic Group * : 
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' )
+					option(value ='') 
+					for eyon in eyons
+						if art
+							if art.ethnic_group
+								option(value =eyon._id class ='form-control'  selected =(eyon._id.toString() == art.ethnic_group._id || eyon._id.toString() == art.ethnic_group) ? 'selected' : false) #{eyon._id}
+							else
+								option(value=eyon._id) #{eyon._id}
+						else
+							option(value=eyon._id) #{eyon._id}
+
+			.form-group
+				label(for ='country') Country * : 
+				select(id ='country' name ='country' class ='form-control form-control-sm' )
+					option(value ='') 
+					for country in countries
+						if art
+							if art.country
+								option(value =country._id class ='form-control'  selected =(country._id.toString() == art.country._id || country._id.toString() == art.country) ? 'selected' : false) #{country._id}
+							else	
+								option(value=country._id) #{country._id}
+						else
+							option(value=country._id) #{country._id}
+
+			.form-group
+				label(for ='continent') Continent * :
+				select(id ='continent' name ='continent' class ='form-control form-control-sm')
+					option(value ='')
+					for continent in continents
+						if art
+							if art.continent
+								option(value =continent._id class ='form-control' selected =(continent._id.toString() == art.continent._id || continent._id.toString() == art.continent) ? 'selected' : false) #{continent._id}
+							else
+								option(value=continent._id) #{continent._id}
+						else
+							option(value=continent._id) #{continent._id}
+
+			.form-group
+				label(for ='region') Region * :
+				select(id ='region' name ='region' class ='form-control form-control-sm')
+					option(value ='')
+					for region in regions
+						if art
+							if art.region
+								option(value =region._id class ='form-control' selected =(region._id.toString() == art.region._id || region._id.toString() == art.region) ? 'selected' : false) #{region._id}
+							else
+								option(value=region._id) #{region._id}
+						else
+							option(value=region._id) #{region._id}
+
+			textarea(name ='main_body' , id ='editor' )
+				if art
+					if art.main_body
+						| !{art.main_body}
+
+			.form-group
+				input(type ='hidden' id ='link' value ='art')
+
+			.form-group
+				input(type ='hidden' id ='update' value =(undefined === art ? '' : art.slug))
+
+			.form-group
+				input(type ='hidden' id ='rmethod' class ='rmethod' value =rmethod)
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4' id ='formSubmit') Submit
+
+

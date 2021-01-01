@@ -1,0 +1,175 @@
+extends ../layouts/book
+
+include ../../includes/error
+
+block content
+	
+	.book-add
+
+		button(id ='showFormGuide' class ='showFormGuide btn btn-primary px-4') Show form filling guidelines: 
+
+		ul(id ='guidelines' class ='guidelines')
+			p Click on the above button button to hide the form filling guideline.
+			p
+				b All fields mark with the asterisk symbol (*) should be filled and have a valid value.
+			li Title should be provided and cannot be less than 0 character or be greater than 150 characters in length.
+			li Date should be provided and cannot be less than 4 character or be greater than 15 characters in length.
+			li Century should be provided and cannot be empty.
+			li Continent should be provided and cannot be empty.
+			li Country should be provided and cannot be empty.
+			li Region should be provided and cannot be empty.
+			li Genre should be provided and cannot be empty.
+			li Ethnic Group should be provided and cannot be empty.
+			li Book Owner should be provided and cannot be less than 0 characters or be greater than 36 characters in length.
+			li Publisher should be provided and cannot be less than 0 characters or be greater than 36 characters in length.
+			li Isbn should be provided and cannot be less than 0 characters or be greater than 36 characters in length.
+			li Page Number should be provided and cannot be less than 0 characters or be greater than 36 characters in length.
+			li Summary of Book should be provided and cannot be less than 10 characters or be greater than 2000 characters in length.
+			li Cover Image should and cannot be greater than 500kb or 500 kilobytes in file size.
+			li Cover Image should be provided and cannot be empty. This is not compulsory if you are updating the entry.
+
+		+ajax
+
+		form(method ='post' ,	action ='' enctype ='multipart/form-data' name ='bookForm')
+
+			.form-group
+				label(for ='title') Title * : 
+				input(type ='text' id ='title' name ='title' class ='form-control form-control-sm' value =(undefined === book ? '' : book.title) required ='required')
+
+			.form-group
+				label(for ='date') Date * :
+				input(type ='text' id ='date' name ='date' class ='form-control form-control-sm' placeholder ='1900'  value =(undefined === photo ? '' : photo.date))
+
+			.form-group
+				label(for ='century') Century * :
+				select(id ='century' name ='century' class ='form-control form-control-sm' )
+					option(value ='')
+					for century in centuries
+						if photo
+							if photo.century
+								option(value =century._id class ='form-control' selected =(century._id.toString() == photo.century._id || century._id.toString() == photo.century) ? 'selected' : false) #{century._id}
+							else
+								option(value=century._id) #{century._id}
+						else
+							option(value=century._id) #{century._id}
+
+			.form-group
+				label(for ='genre') Category * :
+				select(id ='genre' name ='genre' class ='form-control form-control-sm' )
+					option(value ='')
+					for genre in genres
+						if photo
+							if photo.genre
+								option(value =genre._id class ='form-control' selected =(genre._id.toString() == photo.genre._id || genre._id.toString() == photo.genre) ? 'selected' : false) #{genre._id}
+							else
+								option(value=genre._id) #{genre._id}
+						else
+							option(value=genre._id) #{genre._id}
+
+			.form-group
+				label(for ='continent') Continent * :
+				select(id ='continent' name ='continent' class ='form-control form-control-sm' )
+					option(value ='')
+					for continent in continents
+						if photo
+							if photo.continent
+								option(value =continent._id class ='form-control' selected =(continent._id.toString() == photo.continent._id || continent._id.toString() == photo.continent) ? 'selected' : false) #{continent._id}
+							else
+								option(value=continent._id) #{continent._id}
+						else
+							option(value=continent._id) #{continent._id}
+
+			.form-group
+				label(for ='region') Region * :
+				select(id ='region' name ='region' class ='form-control form-control-sm' )
+					option(value ='')
+					for region in regions
+						if photo
+							if photo.region
+								option(value =region._id class ='form-control' selected =(region._id.toString() == photo.region._id || region._id.toString() == photo.region) ? 'selected' : false) #{region._id}
+							else
+								option(value=region._id) #{region._id}
+						else
+							option(value=region._id) #{region._id}
+
+			.form-group
+				label(for ='ethnic_group') Ethnic Group * :
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' required ='required')
+					option(value ='') 
+					for eyon in eyons
+						if photo
+							if photo.ethnic_group
+								option(value =eyon._id class ='form-control' selected =(eyon._id.toString() == photo.ethnic_group._id || eyon._id.toString() == photo.ethnic_group) ? 'selected' : false) #{eyon._id}
+							else
+								option(value=eyon._id) #{eyon._id}
+						else
+							option(value=eyon._id) #{eyon._id}
+
+			.form-group
+				label(for ='country') Country * :
+				select(id ='country' name ='country' class ='form-control form-control-sm' required ='required')
+					option(value ='')
+					for country in countries
+						if photo
+							if photo.country
+								option(value =country._id class ='form-control' selected =(country._id.toString() == photo.country._id || country._id.toString() == photo.country) ? 'selected' : false) #{country._id}
+							else
+								option(value=country._id) #{country._id}
+						else
+							option(value=country._id) #{country._id}
+
+			.form-group
+				label(for ='book_owner') Written By :
+				input(type ='text' id ='book_owner' name ='book_owner' class ='form-control form-control-sm' placeholder ='Plato' value =(undefined === book ? '' : book.book_owner))
+
+			.form-group
+				label(for ='publisher') Publisher :
+				input(type ='text' id ='publisher' name ='publisher' class ='form-control form-control-sm' placeholder ='David Johnson' value =(undefined === book ? '' : book.publisher))
+
+			.form-group
+				label(for ='isbn') Isbn :
+				input(type ='text' id ='isbn' name ='isbn' class ='form-control form-control-sm' placeholder ='98231' value =(undefined === book ? '' : book.isbn))
+
+			.form-group
+				label(for ='page_number') Page Number :
+				input(type ='text' id ='page_number' name ='page_number' class ='form-control form-control-sm' placeholder ='32' value =(undefined === book ? '' : book.page_number))
+
+			.form-group
+				label(for ='summary') Summary * :
+				textarea(id ='summary' name ='summary' class ='form-control form-control-sm' required ='required') !{(undefined === book ? '' : book.summary)}
+
+			.form-group.image
+				label(for ='cover_image') Cover Image * :
+				if rmethod == 'POST'
+					input(type ='file' id ='cover_image' name ='cover_image' class ='form-control form-control-sm' accept ='image/*' required ='required')
+				if rmethod == 'PUT'
+					input(type ='file' id ='cover_image' name ='cover_image' class ='form-control form-control-sm' accept ='image/*')
+
+			.form-group
+				input(type ='hidden' id ='link' value ='book')
+
+			.form-group
+				input(type ='hidden' id ='update' required ='required' value =(undefined === book ? '' : book.slug))
+
+			.form-group
+				input(type ='hidden' id ='rmethod' value =rmethod)
+
+			.form-group(id ='upload-group')
+				button(class ='btn btn-primary' id ='addUpload') Upload Image
+				button(class ='btn btn-danger' id ='delUpload') Delete Image
+				button(class ='btn btn-secondary' id ='calUpload') Cancel Upload
+				p(class ='' id ='upload-progress')
+				p(class ='' id ='uploadError')
+				p(class ='' id ='uploadError1')
+				p(class ='' id ='uploadText')
+				p(id ='uploadMessage')
+				p(id ='percent')
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4' id ='formSubmit') Submit
+
+			p
+				input#pvalue(type='hidden' name ='book_markup')
+				input#plvalue(type='hidden' name ='book_body')
+
+

@@ -1,0 +1,70 @@
+extends ../layout
+
+include ../includes/format_date
+
+block content
+
+	if (comments.length != 0)
+		.comments
+			h2 Comments
+			each comment , i in comments
+				.comment
+					p
+						b : #{i + 1}
+					if comment.author
+						p.author 
+							b #{comment.author.full_name}
+							small.timestamp 
+								+dateFormatted(comment.updatedAt)
+					else
+						p.author 
+							b Anonymous
+							small.timestamp 
+								+dateFormatted(comment.updatedAt)
+					div(class ='commentBody')
+						p.text !{(comment.text).replace(/\n/g, '<br/>')}
+							if uIdentity
+								if comment.author
+									small
+										a(id =(art.slug) href =`/art/${art}/comment/${comment.slug}/vote`) Vote
+										a(id =(art.slug) href =`/art/${art}/comment/${comment.slug}/reply/new`) Reply
+										a(id =(comment.slug) href =(uIdentity == (comment.author ? comment.author._id : '') ) ? `/art/${art}/comment/${comment.slug}/update` : '#' ) Edit
+										a(id =(comment.slug) href =(uIdentity == (comment.author ? comment.author._id : '')) ? `/art/${art}/comment/${comment.slug}/delete` : '#' ) Delete
+						
+						if (comment.votes)
+							p 
+								b Votes :
+								| #{comment.votes.votes}
+						if (comment.replies != 0)
+							.replies
+								each reply , j in comment.replies
+									.reply
+										p
+											b : #{j + 1}
+										p.author 
+											b
+												if reply.author 
+													| #{reply.author.full_name}
+													
+												else
+													| Anonymous
+											small.timestamp 
+												+dateFormatted(comment.updatedAt)
+										p.text 
+											span.comment-author !{(reply.commentAuthorName ? '@' + reply.commentAuthorName : '')} 
+											| !{(reply.text).replace(/\n/g, '<br/>')}
+											if uIdentity
+												if comment.author
+													small
+														a(id =(art.slug) href =`/art/${art}/comment/${comment.slug}/reply/${reply.slug}/vote`) Vote
+														a(id =(comment.slug) href =(uIdentity == comment.author._id) ? `/art/${art}/comment/${comment.slug}/reply/${reply.slug}/update` : '#' ) Edit
+														a(id =(comment.slug) href =(uIdentity == comment.author._id) ? `/art/${art}/comment/${comment.slug}/reply/${reply.slug}/delete` : '#' ) Delete
+										
+										if (reply.votes)
+											p 
+												b Votes :
+												| #{reply.votes.votes}
+
+	else
+		.comments
+			p No comments available for this entry.

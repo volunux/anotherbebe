@@ -1,11 +1,21 @@
-var express = require('express'),			router = express.Router(),		year = require('../controllers/year');
+var router = require('express').Router() , year = require('../controllers/year');
 
 
-router.get('/year/'														,		year.yearList);
 
-router.get('/year/:year'											,		year.yearDetail);
+router.get('/year'																				,										year.yearList);
 
-router.post('/year/'													,		year.yearAdd);
+router.get('/year/name/:year'															,										year.yearName);
+
+router.post('/year'																				,										year.yearAdd);	
+
+
+
+router.get('/year/d/:year'																,										year.yearDetail);
+
+router.put('/year/:year'																	,										year.yearUpdate);
+
+router.delete('/year/:year'																,										year.yearDelete);
+
 
 
 

@@ -1,24 +1,62 @@
-extends ../name_layout
+extends ../layouts/name_layout
 
 block content
-		h1= title
 
-		p Name : #{details.name}
-		if details.definition
-			p Definition : #{details.definition}
-		if details.morphology
-			p Morphology : #{details.morphology}
-		if details.gloss
-			p Gloss : #{details.gloss}
-		if details.alphabet
-			p Alphabet : #{details.alphabet.alphabet}
-		if details.gender
-			p Gender : #{details.gender.gender}
-		if details.specie
-			p Specie : #{details.specie.specie}
-		if details.baby
-			p Name Given to a baby ? :
-				if details.baby.baby
+	.name-detail
+
+		p 
+			b Name 
+			| : #{name.name}
+			
+		if name.definition
+			p
+				b Definition
+				| : !{(name.definition).replace(/\n|\n\n/g, '<br/>')}
+
+		if name.morphology
+			p
+				b Morphology
+				| : #{name.morphology}
+
+		if name.gloss
+			p 
+				b Gloss 
+				| : #{name.gloss}
+
+		if name.continent
+			p 
+				b Continent 
+				| : #{name.continent}
+
+		if name.ethnic_group
+			p 
+				b Ethnic Group 
+				| : #{name.ethnic_group}
+
+		if name.region
+			p
+				b Region 
+				| : #{name.region}
+
+		if name.alphabet
+			p
+				b Alphabet 
+				| : #{name.alphabet}
+
+		if name.gender
+			p
+				b Gender
+				| : #{name.gender}
+
+		if name.specie
+			p
+				b Specie
+				| : #{name.specie}
+
+		if name.baby
+			p
+				b Name Given to a baby ? :
+				if name.baby
 					|	Yes
 				else
 					| No

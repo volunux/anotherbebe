@@ -1,0 +1,35 @@
+mixin textEditor
+			#textEditor
+				select#format.form-control.form-control-sm.mr-4
+					option(selected='') - formatting -
+					option(value='h2') Title 2 &lt;h2&gt;
+					option(value='h3') Title 3 &lt;h3&gt;
+					option(value='h4') Title 4 &lt;h4&gt;
+					option(value='h5') Title 5 &lt;h5&gt;
+					option(value='h6') Subtitle &lt;h6&gt;
+					option(value='p') Paragraph &lt;p&gt;
+					option(value='pre') Preformatted &lt;pre&gt;
+
+				button#clean.fas.fa-eraser.fa-xs.mr-2(title='Clean')
+				button#undo.fas.fa-undo.fa-xs.mr-2(title='Undo')
+				button#redo.fas.fa-redo.fa-xs.mr-2(title='Redo')
+				button#copy.fas.fa-copy.fa-xs.mr-2(title='Copy')
+				button#cut.fas.fa-cut.fa-xs.mr-2(title='Cut')
+				button#bold.fas.fa-bold.fa-xs.mr-2(title='Bold')
+				button#italic.fas.fa-italic.fa-xs.mr-2(title='Italics')
+				button#align-left.fas.fa-align-left.fa-xs.mr-2(title='Align Left')
+				button#align-center.fas.fa-align-center.fa-xs.mr-2(title='Align Center')
+				button#align-right.fas.fa-align-right.fa-xs.mr-2(title='Align Right')
+				button#list-ol.fas.fa-list-ol.fa-xs.mr-2(title='Ordered List')
+				button#list-ul.fas.fa-list-ul.fa-xs.mr-2(title='Unordered List')
+				button#link.fas.fa-link.fa-xs.mr-2(title='Link')
+				button#quote.fas.fa-quote-left.fa-xs.mr-2(title='Quote')
+			
+			#textBox.form-control.form-control-sm(contenteditable='true')
+				if art
+					| !{art.art_markup}
+
+			p#editMode.editMode
+				input#switchBox(type='checkbox', name='switchMode' , onchange='setDocMode(this.checked);')
+				label(for='switchBox') Show HTML
+			

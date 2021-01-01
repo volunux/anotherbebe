@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+
+	.country-list
+		ul
+			for country in countries
+				.country-list-item
+					li
+						a(href ='/war/country/' + country.name.toLowerCase()) #{country.name}

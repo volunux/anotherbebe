@@ -1,25 +1,27 @@
 var mongoose = require('mongoose'),		Schema = mongoose.Schema;
 
 var babySchema = new Schema({
-																'baby' : {
-																							'type' : Boolean } 
+															'_id' : {
 
-},	{
+																				'type' : String
+															} ,
+
+																'name' : {
+																						'type' : String ,
+																																'required' : [true , 'Baby should be provided and cannot be empty.']		} ,
+} ,	{
 				'toObject' : {
 												'virtuals' : true
-				},
+				} ,
 						'toJSON' : {
 													'virtuals' : true
-						},
-								'getters' : true
+						} ,
+								'getters' : true ,
+
+									'collation' : {
+																	'locale' : 'en_US' ,
+																												'strength' : 2
+									}
 });
-
-
-
-babySchema
-							.virtual('url')
-															.get(function () {
-  																								return '/baby/' + this.baby;
-				});
 
 module.exports = mongoose.model('Baby' , babySchema);

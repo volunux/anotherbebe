@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+
+	.country-list
+
+		ul
+
+			if countries
+				for country in countries
+					.country-list-item
+						li
+							a(href =`/art/country/${country._id.toLowerCase().split(' ').join('-')}`) #{country._id}
+				else
+					p No Countries available.

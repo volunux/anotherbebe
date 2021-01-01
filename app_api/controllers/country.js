@@ -1,100 +1,108 @@
-var Country = require('../models/country') , config = require('../config/db') , async = require('async') , cValue = '' , country = '' , cParam = '';
+var Country = require('../models/country') , config = require('../config/config') , async = require('async') , cValue = '' , country = '' , cParam = '';
 
 module.exports = {
 
-	'countryName' : (req , res) => {	cValue = req.params.country;
-			
-			Country.findOne({'country' : new RegExp(cValue, 'i')})
-																													.exec((err , countryName) => {
-																																												if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																												if (!countryName) {
-
-																																																						config.response(res , 404 , {'message' : '404'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , countryName);
-																																		});
-	},
-
 	'countryList' : (req , res) => {	
-																	Country.find({})
-																									.exec(function(err , countryResult) {
-																																											if (err) {
-																																																						config.response(res , 404 , err);
-																																																																							return;	}
-																																											if (!countryResult) {
-																																																						config.response(res , 404 , {'message' : 'countrys cannot be found'});
-																																																																																									return;		}
-																																																						config.response(res , 200 , countryResult);
-																						});
-	},
 
-	'countryDetail' : (req , res) => {		cValue = req.params.country;	
+			Country.find({})
+											.lean({})
+
+											.select('_id')
+
+											.hint({'_id' : 1})
+
+											.exec((err , entryResult) => {
+																					
+																						if (err) {
+																																								return config.errResponse(res , 400 , err);		}
+																						if (entryResult.length == 0) {
+																																								return config.response(res , 404 , {'message' : `Country entries does not exists in the record or is not available.`});		}
+
+																																								return config.response(res , 200 , entryResult);				});
+	} ,
+
+	'countryName' : (req , res) => {	country = req.params.country;
+			
+			Country.findOne({'$text' : {'$search' : country }})
+																															.lean({})
+
+																															.select('name')
+
+																															.exec((err , countryResult) => {
+
+																														if (err) {
+																																								config.errResponse(res , 400 , err);
+																																																												return false;	}
+																												if (!countryResult) {
+																																								config.response(res , 404 , {'message' : 'Country entry does not exists in the record or is not available.'});
+																																																																																															return false;		}
+																																								config.response(res , 200 , countryResult);					});
+	} ,
+
+
+	'countryDetail' : (req , res) => {		country = req.params.country;	
 
 				if (req.params && req.params.country) {
 																			
-			async.waterfall([
-				
-				(callback) => {
-																Country.findOne({'country' : new RegExp(cValue, 'i')})
-																																									.exec((err , countryResult) => {
-																																																									callback(null , countryResult);	});
-																																																	},
-				(arg1 , callback) => {
-																Title.find({'country' : config.id(arg1._id)})
-																																						.exec((err , countryResult) => {
-																																																									callback(null , countryResult);		})
-																																														}],
-				(err , finalResult) => {
-																	if (err) {
-																												config.response(res , 404 , err);
-																																													return;	}
-																	if (!finalResult) {
-																												config.response(res , 404 , {'message' : 'Titles not available for this country'});
-																																																																					return;		}
-																												config.response(res , 200 , finalResult);																																														});
-																			} else {
-																									config.response(res , 404 , {'message' : 'No country id found'});		}
-	},
+		Country.findOne({'$text' : {'$search' : country }})
+																													.lean({})
 
-	'countryAdd' : (req , res) => {		cValue = req.body , country = new Country(cValue);
+																													.exec((err , countryResult) => {
+
+																									if (err) {
+																																			config.errResponse(res , 400 , err);
+																																																							return false;	}
+																							if (!countryResult) {
+																																			config.response(res , 404 , {'message' : 'Country entry does not exists in the record or is not available.'});
+																																																																																										return false;		}
+																																			config.response(res , 200 , countryResult);				});
+			} else {
+								config.response(res , 404 , {'message' : 'No country id provided. Please provide a valid country id.'});		}
+	} ,
+
+	'countryAdd' : (req , res) => {	country = new Country(req.body);
 			
-			country.save(function(err , countryResult) {
-																										if (err) {
-																																config.response(res , 404 , err);
-																																																		return;	}
-																																
-																																config.response(res , 200 , countryResult);																																												});
-	},
+			country.save((err , countryResult) => {
+																							if (err) {
+																													config.errResponse(res , 400 , err);
+																																																				return false;	}		
+																													config.response(res , 200 , countryResult);											});
+	} ,
 
-	'countryUpdate' : (req , res) => {	cValue = req.body.country , cParam = req.params.country;
-
-					if (req.params && req.params.country) {
-
-			Country.findOneAndUpdate({'country' : new RegExp(cParam, 'i')} , cValue , (err) => {
-																																												if (err) {
-																																																		config.response(res , 404 , err);
-																																																																				return;	}
-
-																																																		config.response(res , 201 , {'message' : 'Successful request.'});						});
-													}
-														else {
-																			config.response(res , 404 , {'message' : 'No country id found'});		}
-	},
-
-	'countryDelete' : (req , res) => {	cParam = req.params.country;
+	'countryUpdate' : (req , res) => {	cValue = req.body.country , country = req.params.country;
 
 				if (req.params && req.params.country) {
 
-			Country.findOneAndRemove({'country' : new RegExp(cParam, 'i')} , function(err) {
-																																											if (err) {
-																																																	config.response(res , 404 , err);
-																																																																		return;	}
+				Country.findOne({'$text' : {'$search' : country }} , (err , country) => {
 
-																																																	config.response(res , 204 , {'message' : 'Successful request.'});														});
-												} else {
-																	config.response(res , 404 , {'message' : 'No country id found'});		}
-	},
+																																						if (!country) {	return config.response(res , 404 , {'message' : 'Country entry does not exists in the record or is not available.'});	}
+				Country.findOneAndUpdate({'$text' : {'$search' : country }} , 
+
+									{'$set' : cValue} , {'new' : true , 'runValidators' : true} , (err , countryResult) => {
+																																																						if (err) {																																													
+																																																												config.errResponse(res , 400 , err);
+																																																																																			return false;	}
+																																																												config.response(res , 201 , countryResult);											});		});
+			} else {
+								config.response(res , 404 , {'message' : 'No country id provided. Please provide a valid country id.'});		}
+	} ,
+
+	'countryDelete' : (req , res) => {	country = req.params.country;
+
+		if (req.params.country) {
+				
+				Country.findOne({'$text' : {'$search' : country }} , (err , country) => {
+																																					
+																																						if (!country) {
+																																														return config.response(res , 404 , {'message' : 'Country entry does not exists in the record or is not available.'});	}
+														country.remove((err , countryResult) => {
+																																					if (err) {
+																																											config.errResponse(res , 400 , err);
+																																																															return false;		}
+
+																																							return	config.response(res , 204 , {'message' : 'Entry successfully removed from the record.'});		})			});
+			} 	else {
+									config.response(res , 404 , {'message' : 'No country id provided. Please provide a valid country id.'});		}
+	} 
 
 }

@@ -1,8 +1,8 @@
-var mongoose = require('mongoose'),			config = require('./db');
+var mongoose = require('mongoose') , config = require('./db');
 
 mongoose.promise = global.promise;
 
-mongoose.connect(config.url , { 'useNewUrlParser' : true });
+mongoose.connect(config.url , { 'useNewUrlParser' : true , 'useCreateIndex' : true , 'useFindAndModify' : false , 'isAsync' : true});
 
 mongoose.connection.on('connected' , () => {
 																									console.log('App establish connection to the database');

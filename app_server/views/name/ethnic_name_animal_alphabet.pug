@@ -1,0 +1,24 @@
+extends ../layouts/name_layout
+
+block content
+
+	.name-list
+
+		if names
+
+			for name in names
+
+				.name-item
+
+					if name.name
+
+						p Name : 
+							a(href ='/name/animal/' + eyon + '/' + name.name.toLowerCase()) #{name.name}
+
+					if name.gender
+		
+						p Gender : #{name.gender}
+
+			else
+		
+				p No names available under this alphabet.

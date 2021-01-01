@@ -1,0 +1,28 @@
+include ../../includes/page
+
+doctype html
+html
+	head
+		title 
+			if title
+				| #{title} - 
+			| Aye Mi
+
+		+headSection
+	
+	body
+
+		.container
+
+			+header
+
+			main(id ='main')
+
+				block content
+
+
+			+footer
+
+		
+
+		script(src ='/js/forms/photo_object.min.js' type ='text/javascript')

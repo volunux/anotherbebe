@@ -1,0 +1,15 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+	
+	.post-item
+
+		if law
+			| !{law.main_body}
+			
+			p
+				b Ethnic Group : 
+				| #{law.ethnic_group.eyon}
+

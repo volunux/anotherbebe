@@ -1,0 +1,59 @@
+extends ../../layout
+
+block content
+	
+	.proverb-add
+
+		button(id ='showFormGuide' class ='showFormGuide btn btn-primary px-4') Show form filling guideline: 
+
+		ul.guidelines
+			p Click on the above button button to hide the form filling guideline.
+			p All fields mark with the asterick symbol (*) should have a valid value.
+			li Title cannot be less than 0 character or be greater than 120 characters in length.
+			li Ethnic Group and Country should be provided.
+			li Main body cannot be less than 0 character or be greater than 6000 characters in length.
+
+		ul.ajax
+
+		if errors
+			p Errors found trying to process form. These include : -
+			ul.alert.alert-danger.errors
+				for error in errors
+					if error.msg
+						li!= error.msg
+					else
+						li!= error.message
+	  
+		form(method ='post' ,	action ='' enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='proverb') Proverb * :
+				textarea(id ='proverb' name ='proverb' required ='true' class ='form-control form-control-sm' required ='true') #{(undefined === proverb ? '' : proverb.proverb)}
+
+			.form-group
+				label(for ='literal') Literal Translation * :
+				textarea(id ='literal' name ='literal' required ='true' class ='form-control form-control-sm' required ='true') #{(undefined === proverb ? '' : proverb.literal)}
+
+			.form-group
+				label(for ='meaning') Meaning * :
+				textarea(id ='meaning' name ='meaning' required ='true' class ='form-control form-control-sm' required ='true') #{(undefined === proverb ? '' : proverb.meaning)}
+
+
+			.form-group
+				label(for ='ethnic_group') Ethnic Group * :
+				select(id ='ethnic_group' name ='ethnic_group' class ='form-control form-control-sm' required ='true')
+					option(value ='') 
+					for eyon in eyons
+						if proverb
+							if proverb.ethnic_group
+								option(value =eyon._id class ='form-control'  selected =(eyon._id.toString() == proverb.ethnic_group._id || eyon._id.toString() == proverb.ethnic_group) ? 'selected' : false) #{eyon.eyon}
+							else
+								option(value=country._id) #{eyon.name}
+						else
+							option(value=eyon._id) #{eyon.eyon}
+
+			.form-group
+				input(type ='hidden' id ='link' value ='proverb')
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4' id ='formSubmit') Submit

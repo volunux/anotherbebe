@@ -1,20 +1,20 @@
-var express = require('express'),			router = express.Router(),		baby = require('../controllers/baby');
+var router = require('express').Router() , baby = require('../controllers/baby');
 
 
 
-router.get('/baby'										,		baby.babyList);
+router.get('/baby'																				,										baby.babyList);
 
-router.get('/baby/name/:baby'				,		baby.babyName);
+router.get('/baby/name/:baby'															,										baby.babyName);
 
-router.post('/baby'										,		baby.babyAdd);	
+router.post('/baby'																				,										baby.babyAdd);	
 
 
 
-router.get('/baby/:baby'						,		baby.babyDetail);
+router.get('/baby/d/:baby'																,										baby.babyDetail);
 
-router.put('/baby/:baby'						,		baby.babyUpdate);
+router.put('/baby/:baby'																	,										baby.babyUpdate);
 
-router.delete('/baby/:baby'					,		baby.babyDelete);
+router.delete('/baby/:baby'																,										baby.babyDelete);
 
 
 

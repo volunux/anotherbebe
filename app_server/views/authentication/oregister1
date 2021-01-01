@@ -1,0 +1,31 @@
+extends ../forms/layouts/addlayout
+
+block content
+	
+	.name-add
+
+		if errors
+			p Errors found trying to process form. These include : -
+			ul.alert.alert-danger.errors
+				for error in errors
+					if error.msg
+						li!= error.msg
+					else
+						li!= error.message
+
+		form(method ='post' ,	action ='' enctype ='application/x-www-form-urlencoded')
+
+			.form-group
+				label(for ='full_name') Full Name * :
+				input(type ='text' id ='full_name' name ='full_name' class ='form-control form-control-sm' placeholder ='Viktor' value =(undefined === user ? '' : user.full_name))
+
+			.form-group
+				label(for ='email') Email * :
+				input(type ='text' id ='email' name ='email_address' class ='form-control form-control-sm' placeholder ='david@example.com' value =(undefined === user ? '' : user.email_address))
+
+			.form-group
+				label(for ='password') Password * :
+				input(type ='password' id ='password' name ='password' class ='form-control form-control-sm' placeholder ='*****************' value =(undefined === user ? '' : user.password))
+
+			p
+				button(type ='submit' title ='Submit' class ='btn btn-primary float-right px-4') Submit

@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if festivals
+			for festival in festivals
+				.list-posts-item
+					h2
+						a(href ='/festival/' + festival.url) #{festival.title}
+					p Ethnic Group Name : #{festival.ethnic_group.eyon}
+
+			else
+				p No Festival resource available for this ethnic group.

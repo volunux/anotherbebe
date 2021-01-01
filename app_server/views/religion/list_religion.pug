@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if religions
+			for religion in religions
+				.list-posts-item
+					h2
+						a(href ='/religion/' + religion.url) #{religion.title}
+					p Ethnic Group Name : #{religion.ethnic_group.eyon}
+
+			else
+				p No Religion resource available for this ethnic group.

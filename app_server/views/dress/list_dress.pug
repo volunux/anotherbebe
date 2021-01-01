@@ -1,0 +1,14 @@
+extends ../layout
+
+block content
+	
+	.list-posts
+		if dresses
+			for dress in dresses
+				.list-posts-item
+					h2
+						a(href ='/dress/' + dress.url) #{dress.title}
+					p Ethnic Group Name : #{dress.ethnic_group.eyon}
+
+		else
+			p No Dress resource available for this ethnic group.

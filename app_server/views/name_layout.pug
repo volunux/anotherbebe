@@ -6,11 +6,15 @@ html
 				| #{title} - 
 			| Aye Mi
 
-		link(rel='stylesheet' , href='/stylesheets/boot.css')
-		link(rel='stylesheet' , href='/stylesheets/style-s.css')
-		meta(name ='viewport' content ='width=device-width , initial-sclae=1')
+		link(rel='stylesheet' , href='/stylesheets/add.css')
+		link(rel='stylesheet' , href='/stylesheets/form.css')
+		meta(name ='viewport' content ='width=device-width , initial-scale=1')
+
 	body
 		.container.py-4
+
+			h1 #{title}
+			
 			block content
 
 

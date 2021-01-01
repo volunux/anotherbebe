@@ -1,0 +1,15 @@
+extends ../layout
+
+include ../includes/image
+
+block content
+	
+	.post-item
+
+		if folktale
+			| !{folktale.main_body}
+			
+			p
+				b Ethnic Group : 
+				| #{folktale.ethnic_group.eyon}
+
